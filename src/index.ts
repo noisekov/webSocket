@@ -1,3 +1,4 @@
+import ButtonComponent from "./components/button";
 import "./index.scss";
 // const socket = new WebSocket("ws://localhost:4000");
 
@@ -9,7 +10,12 @@ class App {
   }
 
   init() {
-    console.log(this.body);
+    this.body?.appendChild(
+      new ButtonComponent({
+        className: "btn",
+        text: "ClickBtn",
+      }).getNode()
+    );
   }
 }
 
