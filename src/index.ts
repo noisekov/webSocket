@@ -1,6 +1,7 @@
 import ButtonComponent from "./components/button";
 import "./index.scss";
-// const socket = new WebSocket("ws://localhost:4000");
+const socket = new WebSocket("ws://localhost:4000");
+console.log(socket);
 
 class App {
   body: HTMLBodyElement | null;
