@@ -131,6 +131,18 @@ where:
   }
   ```
 
+- another user is already authorized in this connection 
+
+  ```javascript
+  {
+    id: string,
+    type: "ERROR",
+    payload: {
+      error: "another user is already authorized in this connection",
+    }
+  }
+  ```
+
 - the provided password does not match the provided login
 
   ```javascript
@@ -291,7 +303,9 @@ where:
 
 Initiator: Server application
 
-Description: Is sent by the server to all authenticated users after receiving a request according to the ["User Logout"](#User-Logout) section as a result of processing which the user's session is terminated.
+Description: Is sent by the server to all authenticated users:
+- after receiving a request according to the ["User Logout"](#User-Logout) section as a result of processing which the user's session is terminated.
+- when the connection with an authorized user is broken by the client application, as a result of which the server changes the user's authorization state `isLogined` to `false`.
 
 <details>
 <summary markdown="span">Request from the Server</summary>

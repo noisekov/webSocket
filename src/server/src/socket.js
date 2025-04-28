@@ -25,6 +25,7 @@ module.exports = class Socket {
     this.#httpServer.listen(webSocketServerPort);
     this.#socket = new WebSocket.Server({ server: this.#httpServer });
     this.#socket.on('connection', this.#newConnectionHandler.bind(this));
+
     this.#logger.message(`server runnig on port ${process.env.SERVER_PORT}`);
     this.#logger.message(`server timezone utc`);
   }
