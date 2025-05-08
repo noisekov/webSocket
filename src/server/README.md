@@ -25,7 +25,7 @@ If it is not possible to run the server using port `4000`, you can use another p
 
 The server event log facilitates real-time tracking of incoming requests received by the server and responses sent by the server.
 
-In the created `.env` file, set the `LOG`  parameter to one of the values listed in this section.
+In the created `.env` file, set the `LOG` parameter to one of the values listed in this section.
 
 <details>
 <summary markdown="span">Server Log Display Options</summary>
@@ -131,7 +131,7 @@ where:
   }
   ```
 
-- another user is already authorized in this connection 
+- another user is already authorized in this connection
 
   ```javascript
   {
@@ -304,6 +304,7 @@ where:
 Initiator: Server application
 
 Description: Is sent by the server to all authenticated users:
+
 - after receiving a request according to the ["User Logout"](#User-Logout) section as a result of processing which the user's session is terminated.
 - when the connection with an authorized user is broken by the client application, as a result of which the server changes the user's authorization state `isLogined` to `false`.
 
