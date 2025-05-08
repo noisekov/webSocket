@@ -17,6 +17,7 @@ module.exports = {
         port: 3000,
         open: true,
         hot: true, //отключить если будет плохо обновляться браузер
+        historyApiFallback: true,
     },
     entry: ['@babel/polyfill', path.resolve(__dirname, 'src', 'index')],
     output: {

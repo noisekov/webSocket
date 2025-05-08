@@ -1,18 +1,18 @@
 import ButtonComponent from '../../components/button';
 
-export default class AuthPage {
+export default class AboutPage {
     constructor() {
         this.init();
     }
 
     init() {
-        history.replaceState({}, '', '/login');
+        history.replaceState({}, '', '/about');
     }
 
     render() {
         return new ButtonComponent({
             className: 'btn',
-            text: 'AUTH',
+            text: 'ABOUT',
         }).getNode();
     }
 }
