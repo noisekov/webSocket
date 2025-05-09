@@ -1,3 +1,4 @@
+import MainTemplate from '../components/MainTemplate';
 import AboutPage from '../page/about/about';
 import AuthPage from '../page/auth/auth';
 import AppRouter from './router';
@@ -32,7 +33,9 @@ export default class ContentRender {
                     break;
             }
 
-            this.body?.appendChild(renderTempalate.render());
+            this.body
+                ?.appendChild(new MainTemplate().getNode())
+                .appendChild(renderTempalate.render());
         }
     }
 }
