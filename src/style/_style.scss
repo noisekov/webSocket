@@ -18,3 +18,16 @@
     align-items: center;
     justify-content: center;
 }
+
+.button {
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: 0.3s all;
+
+    &:hover {
+        background-color: #cccccc;
+        border: 1px solid #000;
+    }
+}

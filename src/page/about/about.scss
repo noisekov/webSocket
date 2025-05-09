@@ -1,0 +1,23 @@
+.about-wrapper {
+    width: min(100%, 500px);
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #cccccc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.about-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.about-subtitle {
+    text-align: center;
+}
+
+.about-btn {
+    width: min(100%, 200px);
+}
