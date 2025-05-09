@@ -5,7 +5,7 @@
 ## Технологии
 
 -   Клиент: TypeScript
--   Сервер: Готовый [сервер](https://github.com/rolling-scopes-school/fun-chat-server/tree/main)
+-   Сервер: Готовый [сервер](https://github.com/noisekov/webSocket/tree/main/src/server) на JS
 -   Дополнительно: WebSocket
 
 ## Установка и запуск
@@ -22,8 +22,7 @@
 2. **Установка клиентской части**
 
     ```bash
-    из корня
-    npm install
+    из корня npm install
     npm run start заупустит сразу сервер и клиент
     ```
 
