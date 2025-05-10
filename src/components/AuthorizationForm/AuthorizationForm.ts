@@ -1,6 +1,6 @@
 import ContentRender from '../../utils/ContentRender';
 import AppRouter from '../../utils/Router';
-import ButtonComponent from '../ButtonComponent';
+import WebSoketService from '../../utils/WebSoketService';
 import Component from '../Component';
 
 export default class AuthorizationForm extends Component {
@@ -34,21 +34,17 @@ export default class AuthorizationForm extends Component {
             tag: 'span',
             className: 'auth-error',
         });
-        this.LogInBtn = new ButtonComponent({
+        this.LogInBtn = new Component({
+            tag: 'button',
             className: 'auth-btn button',
             text: 'Log in',
-            onClick: (evt) => {
-                evt.preventDefault();
-                new AppRouter().setPath('main');
-                new ContentRender().render();
-            },
         });
         this.isLoginValid = false;
         this.isPasswordValid = false;
-
         this.updateInputLoginComponents();
         this.updateInputPasswordComponents();
         this.updateLogInBtnComponent();
+        this.addListenerLogInBtnComponent();
         this.addComponents();
     }
 
@@ -57,6 +53,7 @@ export default class AuthorizationForm extends Component {
     }
 
     updateLogInBtnComponent() {
+        this.LogInBtn.setAttribute('type', 'submit');
         this.LogInBtn.setAttribute('disabled', '');
 
         if (this.isPasswordValid && this.isLoginValid) {
@@ -64,8 +61,25 @@ export default class AuthorizationForm extends Component {
         }
     }
 
+    addListenerLogInBtnComponent() {
+        this.LogInBtn.addListener('click', (evt) => {
+            evt.preventDefault();
+            // const login = (
+            //     (evt.target as HTMLInputElement)?.form?.[1] as HTMLInputElement
+            // ).value;
+            // const password = (
+            //     (evt.target as HTMLInputElement)?.form?.[2] as HTMLInputElement
+            // ).value;
+            new WebSoketService();
+            new AppRouter().setPath('main');
+            new ContentRender().render();
+        });
+    }
+
     updateInputLoginComponents() {
         this.inputLogin.setAttribute('placeholder', 'Set login');
+        this.inputLogin.setAttribute('autocomplete', 'off');
+        this.inputLogin.setAttribute('name', 'login');
 
         this.inputLogin.addListener('input', (event: Event) => {
             const valueLog = (event.target as HTMLInputElement).value;
@@ -88,6 +102,8 @@ export default class AuthorizationForm extends Component {
 
     updateInputPasswordComponents() {
         this.inputPassword.setAttribute('placeholder', 'Set password');
+        this.inputPassword.setAttribute('name', 'password');
+        this.inputPassword.setAttribute('autocomplete', 'off');
 
         this.inputPassword.addListener('input', (event: Event) => {
             const valuePas = (event.target as HTMLInputElement).value;
