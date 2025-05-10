@@ -1,7 +1,7 @@
 import ContentRender from './ContentRender';
 
 export default class AppRouter {
-    path: string | null = null;
+    path: string | null;
 
     constructor() {
         this.path = window.location.pathname;
