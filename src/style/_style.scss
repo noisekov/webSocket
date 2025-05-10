@@ -4,10 +4,19 @@
     box-sizing: border-box;
 }
 
+:root {
+    --black: #000;
+    --gray: #cccccc;
+    --radius-standart: 1rem;
+    --radius-small: 0.5rem;
+    --padding-standart: 1rem;
+    --padding-small: 0.5rem;
+}
+
 .body {
-    color: #000;
+    color: var(--black);
     font-family: 'Montserrat', 'Arial', Helvetica, sans-serif;
-    padding: 15px;
+    padding: var(--padding-standart);
     height: 100vh;
 }
 
@@ -20,15 +29,15 @@
 }
 
 .button {
-    border: 1px solid transparent;
-    border-radius: 0.5rem;
-    padding: 0.5rem;
+    border: 2px solid transparent;
+    border-radius: var(--radius-small);
+    padding: var(--padding-small);
     cursor: pointer;
     transition: 0.3s all;
 
     &:hover {
-        background-color: #cccccc;
-        border: 1px solid #000;
+        background-color: var(--gray);
+        border: 2px solid var(--black);
     }
 }
 

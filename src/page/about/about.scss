@@ -1,8 +1,8 @@
 .about-wrapper {
     width: min(100%, 500px);
-    padding: 20px;
-    border-radius: 10px;
-    background-color: #cccccc;
+    padding: var(--padding-standart);
+    border-radius: var(--radius-standart);
+    background-color: var(--gray);
     display: flex;
     flex-direction: column;
     align-items: center;
