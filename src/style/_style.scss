@@ -35,7 +35,11 @@
     cursor: pointer;
     transition: 0.3s all;
 
-    &:hover {
+    &:disabled {
+        cursor: default;
+    }
+
+    &:hover:not(:disabled) {
         background-color: var(--gray);
         border: 2px solid var(--black);
     }
