@@ -5,10 +5,7 @@ export default class AppRouter {
 
     constructor() {
         this.path = window.location.pathname;
-
-        window.addEventListener('popstate', () => {
-            new ContentRender().render();
-        });
+        window.onpopstate = () => new ContentRender().render();
     }
 
     getPath() {
