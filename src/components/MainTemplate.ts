@@ -1,4 +1,4 @@
-import Component from './component';
+import Component from './Component';
 
 export default class MainTemplate extends Component {
     constructor() {

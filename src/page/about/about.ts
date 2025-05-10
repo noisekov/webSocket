@@ -1,5 +1,5 @@
-import ButtonComponent from '../../components/button';
-import Component from '../../components/component';
+import ButtonComponent from '../../components/ButtonComponent';
+import Component from '../../components/Component';
 
 export default class AboutPage {
     constructor() {
@@ -16,12 +16,12 @@ export default class AboutPage {
         });
         content.appendChildren([
             new Component({
-                className: 'about-title',
-                text: 'Funny Chay',
+                className: 'about-title title',
+                text: 'Funny Chat',
             }),
             new Component({
                 className: 'about-subtitle',
-                text: 'The application is created using a third-party server and websokets',
+                text: 'The application is created using a third-party server and WebSokets API',
             }),
             new ButtonComponent({
                 className: 'about-btn button',

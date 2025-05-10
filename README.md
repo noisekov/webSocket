@@ -1,29 +1,33 @@
-# Чат-приложение
+# Chat Application
 
-Проект представляет собой полнофункциональное чат-приложение с клиентской и серверной частями.
+The project is a fully functional chat application with client and server components.
 
-## Технологии
+## Technologies
 
--   Клиент: TypeScript
--   Сервер: Готовый [сервер](https://github.com/noisekov/webSocket/tree/main/src/server) на JS
--   Дополнительно: WebSocket
+-   **Client**: TypeScript
+-   **Server**: Pre-built [server](https://github.com/noisekov/webSocket/tree/main/src/server) in JavaScript
+-   **Additional**: WebSocket
 
-## Установка и запуск
+## Installation & Setup
 
-Склонировать репозиторий
+Clone the repository:
 
-1. **Установка серверной части**
+### 1. Server Setup
 
-    ```bash
-    cd src/server
-    npm install
-    ```
+Navigate to the server directory and install dependencies:
 
-2. **Установка клиентской части**
+```bash
+cd src/server
+npm install
+```
 
-    ```bash
-    из корня npm install
-    npm run start заупустит сразу сервер и клиент
-    ```
+### 2. Client Setup
 
-Да тут две будет два node_modules один для сервера, второй для клиента
+From the root directory, install dependencies and start the application:
+
+```bash
+npm install
+npm run start # Launches both the server and client
+```
+
+Note: This project uses two separate node_modules directories—one for the server and one for the client.

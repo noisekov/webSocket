@@ -1,7 +1,7 @@
 import MainTemplate from '../components/MainTemplate';
-import AboutPage from '../page/about/about';
-import AuthPage from '../page/auth/auth';
-import AppRouter from './router';
+import AboutPage from '../page/about/About';
+import AuthPage from '../page/auth/Auth';
+import AppRouter from './Router';
 
 type RoutePaths = '/login' | '/' | '/about';
 
