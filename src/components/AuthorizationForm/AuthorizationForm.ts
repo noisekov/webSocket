@@ -1,3 +1,4 @@
+import ContentRender from '../../utils/ContentRender';
 import AppRouter from '../../utils/Router';
 import ButtonComponent from '../ButtonComponent';
 import Component from '../Component';
@@ -39,6 +40,7 @@ export default class AuthorizationForm extends Component {
             onClick: (evt) => {
                 evt.preventDefault();
                 new AppRouter().setPath('main');
+                new ContentRender().render();
             },
         });
         this.isLoginValid = false;

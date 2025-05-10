@@ -1,15 +1,16 @@
 import MainTemplate from '../components/MainTemplate';
 import AboutPage from '../page/about/About';
 import AuthPage from '../page/auth/Auth';
+import MainPage from '../page/main/Main';
 import AppRouter from './Router';
 
-type RoutePaths = '/login' | '/' | '/about';
+type RoutePaths = '/login' | '/' | '/about' | '/main';
 
 export default class ContentRender {
     body: HTMLBodyElement | null;
-
     constructor() {
         this.body = document.querySelector('body');
+        document.querySelector('.main')?.remove();
     }
 
     render() {
@@ -27,6 +28,9 @@ export default class ContentRender {
                     break;
                 case '/about':
                     renderTempalate = new AboutPage();
+                    break;
+                case '/main':
+                    renderTempalate = new MainPage();
                     break;
                 default:
                     renderTempalate = new AuthPage();

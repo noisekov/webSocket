@@ -1,8 +1,14 @@
+import ContentRender from './ContentRender';
+
 export default class AppRouter {
     path: string | null = null;
 
     constructor() {
         this.path = window.location.pathname;
+
+        window.addEventListener('popstate', () => {
+            new ContentRender().render();
+        });
     }
 
     getPath() {
@@ -10,6 +16,6 @@ export default class AppRouter {
     }
 
     setPath(path: string) {
-        window.location.href = path;
+        history.replaceState({}, '', path);
     }
 }

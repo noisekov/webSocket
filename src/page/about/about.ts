@@ -1,15 +1,9 @@
 import ButtonComponent from '../../components/ButtonComponent';
 import Component from '../../components/Component';
+import ContentRender from '../../utils/ContentRender';
+import AppRouter from '../../utils/Router';
 
 export default class AboutPage {
-    constructor() {
-        this.init();
-    }
-
-    init() {
-        history.replaceState({}, '', '/about');
-    }
-
     render() {
         const content = new Component({
             className: 'about-wrapper',
@@ -26,7 +20,12 @@ export default class AboutPage {
             new ButtonComponent({
                 className: 'about-btn button',
                 text: 'Back',
-                onClick: () => window.history.go(-1),
+                onClick: () => {
+                    content.destroy();
+                    new AppRouter().setPath('login');
+                    new ContentRender().render();
+                    window.history.go(-1);
+                },
             }),
         ]);
 
