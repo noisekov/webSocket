@@ -26,6 +26,7 @@ npm install
 From the root directory, install dependencies and start the application:
 
 ```bash
+Rename the .env.example file to .env
 npm install
 npm run start # Launches both the server and client
 ```
