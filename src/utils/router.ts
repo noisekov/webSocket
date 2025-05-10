@@ -8,4 +8,8 @@ export default class AppRouter {
     getPath() {
         return this.path;
     }
+
+    setPath(path: string) {
+        window.location.href = path;
+    }
 }

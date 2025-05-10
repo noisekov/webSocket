@@ -1,3 +1,4 @@
+import AppRouter from '../../utils/Router';
 import ButtonComponent from '../ButtonComponent';
 import Component from '../Component';
 
@@ -37,7 +38,7 @@ export default class AuthorizationForm extends Component {
             text: 'Log in',
             onClick: (evt) => {
                 evt.preventDefault();
-                window.location.href = `main`;
+                new AppRouter().setPath('main');
             },
         });
         this.isLoginValid = false;

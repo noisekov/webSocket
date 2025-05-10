@@ -1,6 +1,7 @@
 import ButtonComponent from '../../components/ButtonComponent';
 import Component from '../../components/Component';
 import AuthorizationForm from '../../components/AuthorizationForm/AuthorizationForm';
+import AppRouter from '../../utils/Router';
 
 export default class AuthPage {
     constructor() {
@@ -26,7 +27,7 @@ export default class AuthPage {
                 text: 'Info',
                 onClick: (evt) => {
                     evt.preventDefault();
-                    window.location.href = `about`;
+                    new AppRouter().setPath('about');
                 },
             }),
         ]);
