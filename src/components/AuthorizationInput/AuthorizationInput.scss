@@ -1,0 +1,19 @@
+.auth-fieldset {
+    border-radius: var(--radius-standart);
+}
+
+.auth-fieldset {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.auth-error {
+    color: red;
+    font-size: 14px;
+    line-height: 14px;
+    align-self: start;
+    color: red;
+}

@@ -45,3 +45,10 @@
     font-size: 20px;
     font-weight: bold;
 }
+
+.input {
+    width: 100%;
+    padding: var(--padding-small);
+    border-radius: var(--radius-small);
+    border: 2px solid transparent;
+}

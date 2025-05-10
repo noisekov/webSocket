@@ -1,6 +1,6 @@
 import ButtonComponent from '../../components/ButtonComponent';
 import Component from '../../components/Component';
-import AuthorizationForm from '../../components/AuthorizationForm/AuthorizationForm';
+import AuthorizationInput from '../../components/AuthorizationInput/AuthorizationInput';
 
 export default class AuthPage {
     constructor() {
@@ -13,21 +13,28 @@ export default class AuthPage {
 
     render() {
         const content = new Component({
+            tag: 'form',
             className: 'auth-wrapper',
         });
-        const authorizationForm = new AuthorizationForm();
+        const authorizationInput = new AuthorizationInput();
 
         content.appendChildren([
-            authorizationForm,
+            authorizationInput,
             new ButtonComponent({
                 className: 'auth-btn button',
                 text: 'Log in',
-                onClick: () => (window.location.href = `main`),
+                onClick: (evt) => {
+                    evt.preventDefault();
+                    window.location.href = `main`;
+                },
             }),
             new ButtonComponent({
                 className: 'auth-btn button',
                 text: 'Info',
-                onClick: () => (window.location.href = `about`),
+                onClick: (evt) => {
+                    evt.preventDefault();
+                    window.location.href = `about`;
+                },
             }),
         ]);
 
