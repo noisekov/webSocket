@@ -2,7 +2,7 @@ import MainTemplate from '../components/MainTemplate';
 import AboutPage from '../page/AboutPage/AboutPage';
 import AuthPage from '../page/AuthPage/AuthPage';
 import MainPage from '../page/MainPage/MainPage';
-import AppRouter from './Router';
+import AppRouter from './AppRouter';
 
 type RoutePaths = '/login' | '/' | '/about' | '/main';
 

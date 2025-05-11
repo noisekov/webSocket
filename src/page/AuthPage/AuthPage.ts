@@ -1,7 +1,7 @@
 import ButtonComponent from '../../components/ButtonComponent';
 import Component from '../../components/Component';
 import AuthorizationForm from '../../components/AuthorizationForm/AuthorizationForm';
-import AppRouter from '../../utils/Router';
+import AppRouter from '../../utils/AppRouter';
 import ContentRender from '../../utils/ContentRender';
 
 export default class AuthPage extends Component {

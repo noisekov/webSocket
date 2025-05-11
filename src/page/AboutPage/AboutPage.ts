@@ -1,7 +1,7 @@
 import ButtonComponent from '../../components/ButtonComponent';
 import Component from '../../components/Component';
 import ContentRender from '../../utils/ContentRender';
-import AppRouter from '../../utils/Router';
+import AppRouter from '../../utils/AppRouter';
 
 export default class AboutPage {
     render() {

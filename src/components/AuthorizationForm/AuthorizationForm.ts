@@ -1,5 +1,5 @@
 import ContentRender from '../../utils/ContentRender';
-import AppRouter from '../../utils/Router';
+import AppRouter from '../../utils/AppRouter';
 import WebSoketService from '../../utils/WebSoketService';
 import Component from '../Component';
 
