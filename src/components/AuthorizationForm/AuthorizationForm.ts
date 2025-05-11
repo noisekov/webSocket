@@ -11,7 +11,8 @@ export default class AuthorizationForm extends Component {
     private LogInBtn;
     private isLoginValid;
     private isPasswordValid;
-    constructor() {
+    private formComponent;
+    constructor(callback: () => Component) {
         super({
             tag: 'fieldset',
             className: 'auth-fieldset',
@@ -41,10 +42,11 @@ export default class AuthorizationForm extends Component {
         });
         this.isLoginValid = false;
         this.isPasswordValid = false;
+        this.formComponent = callback();
         this.updateInputLoginComponents();
         this.updateInputPasswordComponents();
         this.updateLogInBtnComponent();
-        this.addListenerLogInBtnComponent();
+        this.addListenerFormComponent();
         this.addComponents();
     }
 
@@ -61,15 +63,15 @@ export default class AuthorizationForm extends Component {
         }
     }
 
-    addListenerLogInBtnComponent() {
-        this.LogInBtn.addListener('click', (evt) => {
+    addListenerFormComponent() {
+        this.formComponent.addListener('submit', (evt: Event) => {
             evt.preventDefault();
-            // const login = (
-            //     (evt.target as HTMLInputElement)?.form?.[1] as HTMLInputElement
-            // ).value;
-            // const password = (
-            //     (evt.target as HTMLInputElement)?.form?.[2] as HTMLInputElement
-            // ).value;
+            const submitEvt = evt.target as HTMLFormElement;
+            const data = new FormData(submitEvt);
+            const [[, login], [, password]] = [...data.entries()];
+            console.log(login);
+            console.log(password);
+
             new WebSoketService();
             new AppRouter().setPath('main');
             new ContentRender().render();

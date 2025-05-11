@@ -1,4 +1,4 @@
-# Chat Application
+# Chat SPA Application written on vanilla TypeScript
 
 The project is a fully functional chat application with client and server components.
 

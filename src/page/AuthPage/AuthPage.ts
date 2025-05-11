@@ -19,7 +19,7 @@ export default class AuthPage extends Component {
             tag: 'form',
             className: 'auth-wrapper',
         });
-        const authorizationForm = new AuthorizationForm();
+        const authorizationForm = new AuthorizationForm(() => content);
 
         content.appendChildren([
             authorizationForm,
