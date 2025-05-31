@@ -75,11 +75,10 @@ export default class AuthorizationForm extends Component {
             evt.preventDefault();
             const submitEvt = evt.target as HTMLFormElement;
             const data = new FormData(submitEvt);
-            const [login, password] = [...data.values()];
-            console.log(login);
-            console.log(password);
-
-            new WebSoketService();
+            const [login, password] = [...data.values()].map((value) =>
+                value.toString()
+            );
+            new WebSoketService({ login, password });
             new AppRouter().setPath('main');
             new ContentRender().render();
         });
