@@ -3,6 +3,7 @@ import Component from '../../components/Component';
 import AuthorizationForm from '../../components/AuthorizationForm/AuthorizationForm';
 import AppRouter from '../../utils/AppRouter';
 import ContentRender from '../../utils/ContentRender';
+import AppState from '../../utils/AppState';
 
 export default class AuthPage extends Component {
     constructor() {
@@ -19,8 +20,8 @@ export default class AuthPage extends Component {
             tag: 'form',
             className: 'auth-wrapper',
         });
-        const authorizationForm = new AuthorizationForm(() => content);
-
+        AppState.getInstance().setState({ content: content });
+        const authorizationForm = new AuthorizationForm();
         content.appendChildren([
             authorizationForm,
             authorizationForm.getLogInBtn(),

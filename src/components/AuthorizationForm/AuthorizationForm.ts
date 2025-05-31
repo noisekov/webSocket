@@ -2,6 +2,11 @@ import ContentRender from '../../utils/ContentRender';
 import AppRouter from '../../utils/AppRouter';
 import WebSoketService from '../../utils/WebSoketService';
 import Component from '../Component';
+import AppState from '../../utils/AppState';
+
+interface AppStateI {
+    content: Component;
+}
 
 export default class AuthorizationForm extends Component {
     private inputLogin;
@@ -12,7 +17,7 @@ export default class AuthorizationForm extends Component {
     private isLoginValid;
     private isPasswordValid;
     private formComponent;
-    constructor(callback: () => Component) {
+    constructor() {
         super({
             tag: 'fieldset',
             className: 'auth-fieldset',
@@ -42,7 +47,9 @@ export default class AuthorizationForm extends Component {
         });
         this.isLoginValid = false;
         this.isPasswordValid = false;
-        this.formComponent = callback();
+        this.formComponent = (
+            AppState.getInstance().getState() as AppStateI
+        ).content;
         this.updateInputLoginComponents();
         this.updateInputPasswordComponents();
         this.updateLogInBtnComponent();
