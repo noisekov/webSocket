@@ -1,3 +1,11 @@
+import Component from '../components/Component';
+
+export interface AppStateI {
+    content: Component;
+    users_login: object;
+    users_active: object;
+}
+
 export default class AppState {
     private static instance: AppState;
     private state;

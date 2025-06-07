@@ -2,11 +2,7 @@ import ContentRender from '../../utils/ContentRender';
 import AppRouter from '../../utils/AppRouter';
 import WebSoketService from '../../utils/WebSoketService';
 import Component from '../Component';
-import AppState from '../../utils/AppState';
-
-interface AppStateI {
-    content: Component;
-}
+import AppState, { AppStateI } from '../../utils/AppState';
 
 export default class AuthorizationForm extends Component {
     private inputLogin;
@@ -78,9 +74,17 @@ export default class AuthorizationForm extends Component {
             const [login, password] = [...data.values()].map((value) =>
                 value.toString()
             );
-            new WebSoketService({ login, password });
-            new AppRouter().setPath('main');
-            new ContentRender().render();
+            new WebSoketService({ login, password }).onMessage((event) => {
+                const typeData = JSON.parse(event.data);
+
+                if (typeData.type === 'USER_ACTIVE') {
+                    AppState.getInstance().setState({
+                        users_active: typeData,
+                    });
+                    new AppRouter().setPath('main');
+                    new ContentRender().render();
+                }
+            });
         });
     }
 

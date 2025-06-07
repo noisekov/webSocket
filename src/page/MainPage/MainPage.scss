@@ -1,0 +1,10 @@
+.main-wrapper {
+    width: min(100%, 500px);
+    padding: var(--padding-standart);
+    border-radius: var(--radius-standart);
+    background-color: var(--gray);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
