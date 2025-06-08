@@ -10,9 +10,12 @@ export interface AppStateI {
     };
 }
 
+type Subscriber = () => void;
+
 export default class AppState {
     private static instance: AppState;
     private state;
+    private subscribers: Subscriber[] = [];
 
     private constructor() {
         this.state = {
@@ -36,7 +39,16 @@ export default class AppState {
 
     public setState(newState: any) {
         this.state = { ...this.state, ...newState };
+        this.notifySubscribers();
 
         return this.state;
+    }
+
+    public subscribe(callback: Subscriber): void {
+        this.subscribers.push(callback);
+    }
+
+    private notifySubscribers(): void {
+        this.subscribers.forEach((callback) => callback());
     }
 }

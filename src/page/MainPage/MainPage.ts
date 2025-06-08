@@ -5,25 +5,38 @@ import WebSocketService from '../../utils/WebSoketService';
 
 export default class MainPage {
     users: Component;
+    private webSocketService: WebSocketService;
+    private appState: AppState;
+
     constructor() {
+        this.appState = AppState.getInstance();
         this.users = new Component({
             tag: 'div',
             className: 'users',
         });
+        this.webSocketService = new WebSocketService();
+        this.setupStateSubscription();
+        this.setupWebSocketListeners();
     }
 
-    renderUsers() {
-        new WebSocketService().onMessage(async (event) => {
+    private setupWebSocketListeners(): void {
+        this.webSocketService.onMessage(async (event) => {
             const typeData = JSON.parse(event.data);
 
             if (typeData.type === 'USER_ACTIVE') {
-                AppState.getInstance().setState({
+                this.appState.setState({
                     users_active: typeData,
                 });
             }
         });
+    }
 
-        const arrLoginedUsers = (AppState.getInstance().getState() as AppStateI)
+    private setupStateSubscription() {
+        this.appState.subscribe(() => this.updateUserList());
+    }
+
+    updateUserList() {
+        const arrLoginedUsers = (this.appState.getState() as AppStateI)
             .users_active.payload.users;
 
         const userComponents = arrLoginedUsers.map(
@@ -36,12 +49,10 @@ export default class MainPage {
             }
         );
 
-        return userComponents;
+        this.users.appendChildren(userComponents);
     }
 
     render() {
-        const users = this.renderUsers();
-
         const content = new Component({
             className: 'main-wrapper',
         });
@@ -56,7 +67,6 @@ export default class MainPage {
             className: 'right-side',
             tag: 'div',
         });
-        this.users.appendChildren(users);
         leftSideChat.appendChildren([
             new Component({ tag: 'input', className: 'search' }),
             this.users,
