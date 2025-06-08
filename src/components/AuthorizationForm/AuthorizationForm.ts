@@ -74,7 +74,15 @@ export default class AuthorizationForm extends Component {
             const [login, password] = [...data.values()].map((value) =>
                 value.toString()
             );
-            new WebSoketService({ login, password }).onMessage((event) => {
+            sessionStorage.setItem(
+                'noisekov-funchat',
+                `{
+                  "login": "${login}",
+                  "password": "${password}",
+                  "isLogined": true
+                }`
+            );
+            new WebSoketService().onMessage((event) => {
                 const typeData = JSON.parse(event.data);
 
                 if (typeData.type === 'USER_ACTIVE') {

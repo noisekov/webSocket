@@ -1,5 +1,7 @@
 import { BurgerMenu } from '../../components/BurgerMenu/BurgerMenu';
 import Component from '../../components/Component';
+import AppState, { AppStateI } from '../../utils/AppState';
+import WebSocketService from '../../utils/WebSoketService';
 
 export default class MainPage {
     users: Component;
@@ -10,7 +12,36 @@ export default class MainPage {
         });
     }
 
+    renderUsers() {
+        new WebSocketService().onMessage(async (event) => {
+            const typeData = JSON.parse(event.data);
+
+            if (typeData.type === 'USER_ACTIVE') {
+                AppState.getInstance().setState({
+                    users_active: typeData,
+                });
+            }
+        });
+
+        const arrLoginedUsers = (AppState.getInstance().getState() as AppStateI)
+            .users_active.payload.users;
+
+        const userComponents = arrLoginedUsers.map(
+            (user: { login: string; isLogined: boolean }) => {
+                return new Component({
+                    tag: `div`,
+                    className: `user ${user.isLogined ? 'active' : 'inactive'}`,
+                    text: user.login,
+                });
+            }
+        );
+
+        return userComponents;
+    }
+
     render() {
+        const users = this.renderUsers();
+
         const content = new Component({
             className: 'main-wrapper',
         });
@@ -25,6 +56,7 @@ export default class MainPage {
             className: 'right-side',
             tag: 'div',
         });
+        this.users.appendChildren(users);
         leftSideChat.appendChildren([
             new Component({ tag: 'input', className: 'search' }),
             this.users,

@@ -6,10 +6,19 @@ interface WebSocketDataI {
 export default class WebSocketService {
     private connection: WebSocket;
     private messageHandlers: ((event: MessageEvent) => void)[] = [];
+    private data: WebSocketDataI;
 
-    constructor(private data: WebSocketDataI) {
+    constructor() {
         this.connection = new WebSocket('ws://localhost:4000');
         this.setupEventListeners();
+        this.data = JSON.parse(
+            sessionStorage.getItem('noisekov-funchat') ||
+                `{
+                  "login": "",
+                  "password": "",
+                  "isLogined": false
+                }`
+        );
     }
 
     private setupEventListeners() {
