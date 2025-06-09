@@ -67,15 +67,11 @@
     &:hover {
         background: var(--white);
     }
-    &.active {
-        &::marker {
-            color: green;
-        }
+    &.active::marker {
+        color: green;
     }
-    &.inactive {
-        &::marker {
-            color: red;
-        }
+    &.inactive::marker {
+        color: red;
     }
 }
 
