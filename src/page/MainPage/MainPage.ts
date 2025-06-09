@@ -1,4 +1,5 @@
 import { BurgerMenu } from '../../components/BurgerMenu/BurgerMenu';
+import ButtonComponent from '../../components/ButtonComponent';
 import Component from '../../components/Component';
 import AppState, { AppStateI } from '../../utils/AppState';
 import WebSocketService from '../../utils/WebSoketService';
@@ -7,14 +8,19 @@ export default class MainPage {
     users: Component;
     private webSocketService: WebSocketService;
     private appState: AppState;
+    private currentUserLogin;
 
     constructor() {
         this.appState = AppState.getInstance();
         this.users = new Component({
-            tag: 'div',
+            tag: 'ul',
             className: 'users',
         });
         this.webSocketService = new WebSocketService();
+        this.currentUserLogin = JSON.parse(
+            sessionStorage.getItem('noisekov-funchat') ||
+                `{login: "", password: "", isLogined: false}`
+        ).login;
         this.setupStateSubscription();
         this.setupWebSocketListeners();
     }
@@ -39,10 +45,14 @@ export default class MainPage {
         const arrLoginedUsers = (this.appState.getState() as AppStateI)
             .users_active.payload.users;
 
-        const userComponents = arrLoginedUsers.map(
+        const userComponents = arrLoginedUsers.flatMap(
             (user: { login: string; isLogined: boolean }) => {
+                if (user.login === this.currentUserLogin) {
+                    return [];
+                }
+
                 return new Component({
-                    tag: `div`,
+                    tag: `li`,
                     className: `user ${user.isLogined ? 'active' : 'inactive'}`,
                     text: user.login,
                 });
@@ -50,6 +60,37 @@ export default class MainPage {
         );
 
         this.users.appendChildren(userComponents);
+    }
+
+    renderHeader() {
+        const header = new Component({
+            tag: 'div',
+            className: 'main-header',
+        });
+        header.appendChildren([
+            new Component({
+                className: 'main-user',
+                text: `User: ${this.currentUserLogin}`,
+            }),
+            new Component({
+                className: 'main-title title',
+                text: 'CHAT',
+            }),
+            new ButtonComponent({
+                className: 'button',
+                text: 'Exit',
+            }),
+        ]);
+
+        return header;
+    }
+
+    renderInput() {
+        const input = new Component({ tag: 'input', className: 'search' });
+        input.setAttribute('placeholder', 'Search...');
+        input.setAttribute('name', 'search');
+
+        return input;
     }
 
     render() {
@@ -67,17 +108,12 @@ export default class MainPage {
             className: 'right-side',
             tag: 'div',
         });
-        leftSideChat.appendChildren([
-            new Component({ tag: 'input', className: 'search' }),
-            this.users,
-        ]);
+        leftSideChat.appendChildren([this.renderInput(), this.users]);
         chatWrapper.appendChildren([leftSideChat, rightSideChat]);
+
         content.appendChildren([
-            new Component({
-                className: 'main-title title',
-                text: 'FUN CHAT',
-            }),
             new BurgerMenu(),
+            this.renderHeader(),
             chatWrapper,
         ]);
 

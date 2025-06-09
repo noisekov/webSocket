@@ -11,7 +11,7 @@ export default class AboutPage {
         content.appendChildren([
             new Component({
                 className: 'about-title title',
-                text: 'Funny Chat',
+                text: 'Chat',
             }),
             new Component({
                 className: 'about-subtitle',
