@@ -1,6 +1,7 @@
 import { BurgerMenu } from '../../components/BurgerMenu/BurgerMenu';
 import ButtonComponent from '../../components/ButtonComponent';
 import Component from '../../components/Component';
+import { SearchInput } from '../../components/SearchInput/SearchInput';
 import AppState, { AppStateI } from '../../utils/AppState';
 import WebSocketService from '../../utils/WebSoketService';
 
@@ -44,7 +45,6 @@ export default class MainPage {
     updateUserList() {
         const arrLoginedUsers = (this.appState.getState() as AppStateI)
             .users_active.payload.users;
-
         const userComponents = arrLoginedUsers.flatMap(
             (user: { login: string; isLogined: boolean }) => {
                 if (user.login === this.currentUserLogin) {
@@ -85,14 +85,6 @@ export default class MainPage {
         return header;
     }
 
-    renderInput() {
-        const input = new Component({ tag: 'input', className: 'search' });
-        input.setAttribute('placeholder', 'Search...');
-        input.setAttribute('name', 'search');
-
-        return input;
-    }
-
     render() {
         const content = new Component({
             className: 'main-wrapper',
@@ -108,7 +100,7 @@ export default class MainPage {
             className: 'right-side',
             tag: 'div',
         });
-        leftSideChat.appendChildren([this.renderInput(), this.users]);
+        leftSideChat.appendChildren([new SearchInput(), this.users]);
         chatWrapper.appendChildren([leftSideChat, rightSideChat]);
 
         content.appendChildren([

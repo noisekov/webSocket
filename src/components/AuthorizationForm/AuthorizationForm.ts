@@ -13,6 +13,7 @@ export default class AuthorizationForm extends Component {
     private isLoginValid;
     private isPasswordValid;
     private formComponent;
+    private appState;
     constructor() {
         super({
             tag: 'fieldset',
@@ -43,9 +44,8 @@ export default class AuthorizationForm extends Component {
         });
         this.isLoginValid = false;
         this.isPasswordValid = false;
-        this.formComponent = (
-            AppState.getInstance().getState() as AppStateI
-        ).content;
+        this.appState = AppState.getInstance();
+        this.formComponent = (this.appState.getState() as AppStateI).content;
         this.updateInputLoginComponents();
         this.updateInputPasswordComponents();
         this.updateLogInBtnComponent();
@@ -86,7 +86,7 @@ export default class AuthorizationForm extends Component {
                 const typeData = JSON.parse(event.data);
 
                 if (typeData.type === 'USER_ACTIVE') {
-                    AppState.getInstance().setState({
+                    this.appState.setState({
                         users_active: typeData,
                     });
                     new AppRouter().setPath('main');
