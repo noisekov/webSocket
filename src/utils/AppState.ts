@@ -8,6 +8,7 @@ export interface AppStateI {
             users: [];
         };
     };
+    old_users: [];
 }
 
 type Subscriber = () => void;
@@ -22,6 +23,7 @@ export default class AppState {
             users_active: {
                 payload: { users: [] },
             },
+            old_users: [],
         };
     }
 

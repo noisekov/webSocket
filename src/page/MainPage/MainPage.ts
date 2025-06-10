@@ -45,6 +45,7 @@ export default class MainPage {
     updateUserList() {
         const arrLoginedUsers = (this.appState.getState() as AppStateI)
             .users_active.payload.users;
+        this.users.destroyChildren();
         const userComponents = arrLoginedUsers.flatMap(
             (user: { login: string; isLogined: boolean }) => {
                 if (user.login === this.currentUserLogin) {

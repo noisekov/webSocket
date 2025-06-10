@@ -15,18 +15,30 @@ export class SearchInput extends Component {
     }
 
     addHandler() {
+        let isSetOldUsers = false;
+
         this.addListener('input', (event) => {
             const arrUsers =
                 this.appState.getState().users_active.payload.users;
-
+            const inputValue = (event?.target as HTMLInputElement).value;
             const filteredUsers = arrUsers.filter((user: { login: string }) => {
                 return user.login
                     .toLowerCase()
-                    .includes(
-                        (event?.target as HTMLInputElement).value.toLowerCase()
-                    );
+                    .includes(inputValue.toLowerCase());
             });
-            console.log(filteredUsers);
+
+            this.appState.setState({
+                users_active: {
+                    payload: {
+                        users: inputValue
+                            ? filteredUsers
+                            : this.appState.getState().old_users,
+                    },
+                },
+                ...(isSetOldUsers ? {} : { old_users: arrUsers }),
+            });
+
+            isSetOldUsers = true;
         });
     }
 }
