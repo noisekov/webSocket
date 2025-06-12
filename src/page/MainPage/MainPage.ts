@@ -2,14 +2,16 @@ import { BurgerMenu } from '../../components/BurgerMenu/BurgerMenu';
 import ButtonComponent from '../../components/ButtonComponent';
 import Component from '../../components/Component';
 import { SearchInput } from '../../components/SearchInput/SearchInput';
+import AppRouter from '../../utils/AppRouter';
 import AppState, { AppStateI } from '../../utils/AppState';
+import ContentRender from '../../utils/ContentRender';
 import WebSocketService from '../../utils/WebSoketService';
 
 export default class MainPage {
     users: Component;
     private webSocketService: WebSocketService;
     private appState: AppState;
-    private currentUserLogin;
+    private currentUserData;
 
     constructor() {
         this.appState = AppState.getInstance();
@@ -18,10 +20,10 @@ export default class MainPage {
             className: 'users',
         });
         this.webSocketService = new WebSocketService();
-        this.currentUserLogin = JSON.parse(
+        this.currentUserData = JSON.parse(
             sessionStorage.getItem('noisekov-funchat') ||
                 `{login: "", password: "", isLogined: false}`
-        ).login;
+        );
         this.setupStateSubscription();
         this.setupWebSocketListeners();
     }
@@ -48,7 +50,7 @@ export default class MainPage {
         this.users.destroyChildren();
         const userComponents = arrLoginedUsers.flatMap(
             (user: { login: string; isLogined: boolean }) => {
-                if (user.login === this.currentUserLogin) {
+                if (user.login === this.currentUserData.login) {
                     return [];
                 }
 
@@ -71,7 +73,7 @@ export default class MainPage {
         header.appendChildren([
             new Component({
                 className: 'main-user',
-                text: `User: ${this.currentUserLogin}`,
+                text: `User: ${this.currentUserData.login}`,
             }),
             new Component({
                 className: 'main-title title',
@@ -80,6 +82,22 @@ export default class MainPage {
             new ButtonComponent({
                 className: 'button',
                 text: 'Exit',
+                onClick: () => {
+                    const { login, password } = this.currentUserData;
+                    this.webSocketService.send({
+                        id: '1',
+                        type: 'USER_LOGOUT',
+                        payload: {
+                            user: {
+                                login,
+                                password,
+                            },
+                        },
+                    });
+                    new AppRouter().setPath('login');
+                    new ContentRender().render();
+                    sessionStorage.clear();
+                },
             }),
         ]);
 
