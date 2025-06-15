@@ -18,5 +18,36 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    text-align: center;
     height: 100%;
+}
+
+.chat__message {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    border-top: 1px solid var(--black);
+    padding-top: var(--padding-small);
+}
+
+.chat__input {
+    width: 100%;
+    border: 2px solid transparent;
+    border-radius: var(--radius-standart);
+    padding: var(--padding-small);
+    height: 30px;
+    transition: all 0.3s ease;
+    &:hover {
+        border: 2px solid var(--black);
+    }
+    &:focus {
+        height: 50px;
+    }
+}
+
+.chat__submit {
+    display: flex;
+    align-items: center;
 }

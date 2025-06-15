@@ -24,8 +24,29 @@ export class Chat extends Component {
         this.appendChildren([chat]);
     }
 
+    private renderInput() {
+        const inputWrapper = new Component({
+            tag: 'div',
+            className: 'chat__message',
+        });
+        const input = new Component({
+            tag: 'input',
+            className: 'chat__input',
+        });
+        input.setAttribute('placeholder', 'Write your message...');
+        const submit = new Component({
+            tag: 'button',
+            className: 'chat__submit button',
+            text: 'submit',
+        });
+        submit.setAttribute('type', 'submit');
+        inputWrapper.appendChildren([input, submit]);
+        this.appendChildren([inputWrapper]);
+    }
+
     render() {
         this.renderHeader();
         this.renderChatWindow();
+        this.renderInput();
     }
 }
