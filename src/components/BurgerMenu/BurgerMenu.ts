@@ -6,7 +6,7 @@ export class BurgerMenu extends Component {
         this.addComponents();
     }
 
-    addComponents() {
+    private addComponents() {
         this.appendChildren([
             new Component({ tag: 'span', className: 'burger-line' }),
         ]);

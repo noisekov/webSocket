@@ -1,5 +1,6 @@
 import { BurgerMenu } from '../../components/BurgerMenu/BurgerMenu';
 import ButtonComponent from '../../components/ButtonComponent';
+import { Chat } from '../../components/Chat/Chat';
 import Component from '../../components/Component';
 import { SearchInput } from '../../components/SearchInput/SearchInput';
 import AppRouter from '../../utils/AppRouter';
@@ -119,6 +120,7 @@ export default class MainPage {
             className: 'right-side',
             tag: 'div',
         });
+        rightSideChat.appendChildren([new Chat()]);
         leftSideChat.appendChildren([new SearchInput(), this.users]);
         chatWrapper.appendChildren([leftSideChat, rightSideChat]);
 

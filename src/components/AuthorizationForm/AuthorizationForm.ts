@@ -53,11 +53,11 @@ export default class AuthorizationForm extends Component {
         this.addComponents();
     }
 
-    matchRegular(inputValue: string): boolean {
+    private matchRegular(inputValue: string): boolean {
         return new RegExp('^(?=.*[a-z])(?=.*[A-Z]).*$').test(inputValue);
     }
 
-    updateLogInBtnComponent() {
+    private updateLogInBtnComponent() {
         this.LogInBtn.setAttribute('type', 'submit');
         this.LogInBtn.setAttribute('disabled', '');
 
@@ -66,7 +66,7 @@ export default class AuthorizationForm extends Component {
         }
     }
 
-    addListenerFormComponent() {
+    private addListenerFormComponent() {
         this.formComponent.addListener('submit', (evt: Event) => {
             evt.preventDefault();
             const submitEvt = evt.target as HTMLFormElement;
@@ -96,7 +96,7 @@ export default class AuthorizationForm extends Component {
         });
     }
 
-    updateInputLoginComponents() {
+    private updateInputLoginComponents() {
         this.inputLogin.setAttribute('placeholder', 'Set login');
         this.inputLogin.setAttribute('autocomplete', 'off');
         this.inputLogin.setAttribute('name', 'login');
@@ -120,7 +120,7 @@ export default class AuthorizationForm extends Component {
         });
     }
 
-    updateInputPasswordComponents() {
+    private updateInputPasswordComponents() {
         this.inputPassword.setAttribute('placeholder', 'Set password');
         this.inputPassword.setAttribute('name', 'password');
         this.inputPassword.setAttribute('autocomplete', 'off');
@@ -144,7 +144,7 @@ export default class AuthorizationForm extends Component {
         });
     }
 
-    addComponents() {
+    private addComponents() {
         this.appendChildren([
             new Component({
                 tag: 'legend',
@@ -158,7 +158,7 @@ export default class AuthorizationForm extends Component {
         ]);
     }
 
-    getLogInBtn() {
+    public getLogInBtn() {
         return this.LogInBtn;
     }
 }

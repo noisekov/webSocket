@@ -14,7 +14,7 @@ export class SearchInput extends Component {
         this.addHandler();
     }
 
-    debounce<T>(func: (arg: T) => unknown, time: number) {
+    private debounce<T>(func: (arg: T) => unknown, time: number) {
         let timeout: NodeJS.Timeout;
 
         return function (this: unknown, arg: T) {
@@ -23,7 +23,7 @@ export class SearchInput extends Component {
         };
     }
 
-    addHandler() {
+    private addHandler() {
         let isSetOldUsers = false;
 
         this.addListener(
