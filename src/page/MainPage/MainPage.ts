@@ -22,7 +22,7 @@ export default class MainPage {
         this.webSocketService = new WebSocketService();
         this.currentUserData = JSON.parse(
             sessionStorage.getItem('noisekov-funchat') ||
-                `{login: "", password: "", isLogined: false}`
+                '{"login": "", "password": "", "isLogined": false}'
         );
         this.setupStateSubscription();
         this.setupWebSocketListeners();
