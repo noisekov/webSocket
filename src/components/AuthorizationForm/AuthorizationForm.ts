@@ -103,8 +103,12 @@ export default class AuthorizationForm extends Component {
 
         this.inputLogin.addListener('input', (event: Event) => {
             const valueLog = (event.target as HTMLInputElement).value;
+            const MAX_LENGTH_LOGIN = 12;
 
-            if (this.matchRegular(valueLog)) {
+            if (
+                this.matchRegular(valueLog) &&
+                valueLog.length < MAX_LENGTH_LOGIN
+            ) {
                 this.inputLoginMsg.setTextContent('');
                 this.isLoginValid = true;
                 this.updateLogInBtnComponent();
@@ -114,7 +118,7 @@ export default class AuthorizationForm extends Component {
 
             this.isLoginValid = false;
             this.inputLoginMsg.setTextContent(
-                'Login must contain mixed case letters.'
+                `The login must contain letters of different cases and be less than ${MAX_LENGTH_LOGIN} characters long.`
             );
             this.updateLogInBtnComponent();
         });
@@ -127,8 +131,12 @@ export default class AuthorizationForm extends Component {
 
         this.inputPassword.addListener('input', (event: Event) => {
             const valuePas = (event.target as HTMLInputElement).value;
+            const MIN_LENGTH_PASSWORD = 4;
 
-            if (this.matchRegular(valuePas) && valuePas.length > 4) {
+            if (
+                this.matchRegular(valuePas) &&
+                valuePas.length > MIN_LENGTH_PASSWORD
+            ) {
                 this.inputPasswordMsg.setTextContent('');
                 this.isPasswordValid = true;
                 this.updateLogInBtnComponent();
@@ -138,7 +146,7 @@ export default class AuthorizationForm extends Component {
 
             this.isPasswordValid = false;
             this.inputPasswordMsg.setTextContent(
-                'Password must contain mixed case letters and be more than 4 characters.'
+                `Password must contain mixed case letters and be more than ${MIN_LENGTH_PASSWORD} characters.`
             );
             this.updateLogInBtnComponent();
         });
