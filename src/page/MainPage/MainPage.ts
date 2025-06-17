@@ -79,13 +79,9 @@ export default class MainPage {
             textarea: textareaComponent,
         } = this.appState.getState();
         headerChatComponent.setTextContent(clickedUserName || 'unknown');
-        const headerStatusText = component.hasClass('active')
-            ? 'Online'
-            : 'Offline';
-        headerChatStatus.setTextContent(headerStatusText);
-        component.hasClass('active')
-            ? headerChatStatus.addClass('online')
-            : headerChatStatus.addClass('offline');
+        const status = component.hasClass('active') ? 'online' : 'offline';
+        headerChatStatus.setTextContent(status);
+        headerChatStatus.addClass(status);
         chatComponent.setTextContent('Write your first message...');
         textareaComponent.removeAttribute('disabled');
     }
