@@ -8,7 +8,7 @@
 .chat__header {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
     height: 40px;
     width: 100%;
     border-bottom: 1px solid var(--black);
@@ -32,13 +32,14 @@
     padding-top: var(--padding-small);
 }
 
-.chat__input {
+.chat__textarea {
     width: 100%;
     border: 2px solid transparent;
     border-radius: var(--radius-standart);
     padding: var(--padding-small);
-    height: 30px;
+    height: 40px;
     transition: all 0.3s ease;
+    resize: none;
     &:hover:not(:disabled) {
         border: 2px solid var(--black);
     }
@@ -50,4 +51,13 @@
 .chat__submit {
     display: flex;
     align-items: center;
+}
+
+.chat__user-status {
+    &.online {
+        color: green;
+    }
+    &.offline {
+        color: red;
+    }
 }

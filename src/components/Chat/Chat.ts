@@ -1,8 +1,11 @@
+import AppState from '../../utils/AppState';
 import Component from '../Component';
 
 export class Chat extends Component {
+    private appState;
     constructor() {
         super({ tag: 'div', className: 'chat' });
+        this.appState = AppState.getInstance();
         this.render();
     }
 
@@ -11,7 +14,19 @@ export class Chat extends Component {
             tag: 'div',
             className: 'chat__header',
         });
-        header.appendChildren([new Component({ tag: 'div' })]);
+        const chosenUser = new Component({
+            tag: 'div',
+            className: 'chat__user',
+        });
+        const chosenUserStatus = new Component({
+            tag: 'div',
+            className: 'chat__user-status',
+        });
+        this.appState.setState({
+            chosen_user: chosenUser,
+            chosen_user_status: chosenUserStatus,
+        });
+        header.appendChildren([chosenUser, chosenUserStatus]);
         this.appendChildren([header]);
     }
 
@@ -21,6 +36,7 @@ export class Chat extends Component {
             className: 'chat__window',
             text: 'Select the user to send the message to...',
         });
+        this.appState.setState({ chat_content: chat });
         this.appendChildren([chat]);
     }
 
@@ -29,12 +45,13 @@ export class Chat extends Component {
             tag: 'div',
             className: 'chat__message',
         });
-        const input = new Component({
-            tag: 'input',
-            className: 'chat__input',
+        const textarea = new Component({
+            tag: 'textarea',
+            className: 'chat__textarea',
         });
-        input.setAttribute('placeholder', 'Write your message...');
-        input.setAttribute('disabled', 'true');
+        this.appState.setState({ textarea });
+        textarea.setAttribute('placeholder', 'Write your message...');
+        textarea.setAttribute('disabled', 'true');
         const submit = new Component({
             tag: 'button',
             className: 'chat__submit button',
@@ -42,7 +59,7 @@ export class Chat extends Component {
         });
         submit.setAttribute('type', 'submit');
         submit.setAttribute('disabled', 'true');
-        inputWrapper.appendChildren([input, submit]);
+        inputWrapper.appendChildren([textarea, submit]);
         this.appendChildren([inputWrapper]);
     }
 

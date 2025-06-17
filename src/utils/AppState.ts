@@ -9,6 +9,10 @@ export interface AppStateI {
         };
     };
     users_before_filter: [];
+    chosen_user: Component;
+    chosen_user_status: Component;
+    chat_content: Component;
+    textarea: Component;
 }
 
 type Subscriber = () => void;
@@ -24,6 +28,20 @@ export default class AppState {
                 payload: { users: [] },
             },
             users_before_filter: [],
+            chosen_user: new Component({ tag: 'div', className: 'chat__user' }),
+            chosen_user_status: new Component({
+                tag: 'div',
+                className: 'chat__user-status',
+            }),
+            chat_content: new Component({
+                tag: 'div',
+                className: 'chat__window',
+                text: 'Select the user to send the message to...',
+            }),
+            textarea: new Component({
+                tag: 'textarea',
+                className: 'chat__textarea',
+            }),
         };
     }
 

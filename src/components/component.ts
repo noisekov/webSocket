@@ -53,6 +53,10 @@ export default class Component {
         this.#node.classList.add(className);
     }
 
+    hasClass(className: string) {
+        return this.#node.classList.contains(className);
+    }
+
     toggleClass(className: string) {
         this.#node.classList.toggle(className);
     }

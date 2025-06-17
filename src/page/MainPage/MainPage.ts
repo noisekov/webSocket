@@ -54,16 +54,40 @@ export default class MainPage {
                 if (user.login === this.currentUserData.login) {
                     return [];
                 }
-
-                return new Component({
+                const component = new Component({
                     tag: `li`,
                     className: `user ${user.isLogined ? 'active' : 'inactive'}`,
                     text: user.login,
                 });
+                component.addListener('click', () => {
+                    const clickedUserName = component.getNode().textContent;
+
+                    this.handlerChosenUser(component, clickedUserName);
+                });
+                return component;
             }
         );
 
         this.users.appendChildren(userComponents);
+    }
+
+    handlerChosenUser(component: Component, clickedUserName: string | null) {
+        const {
+            chosen_user: headerChatComponent,
+            chosen_user_status: headerChatStatus,
+            chat_content: chatComponent,
+            textarea: textareaComponent,
+        } = this.appState.getState();
+        headerChatComponent.setTextContent(clickedUserName || 'unknown');
+        const headerStatusText = component.hasClass('active')
+            ? 'Online'
+            : 'Offline';
+        headerChatStatus.setTextContent(headerStatusText);
+        component.hasClass('active')
+            ? headerChatStatus.addClass('online')
+            : headerChatStatus.addClass('offline');
+        chatComponent.setTextContent('Write your first message...');
+        textareaComponent.removeAttribute('disabled');
     }
 
     renderHeader() {
