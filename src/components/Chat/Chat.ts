@@ -34,12 +34,14 @@ export class Chat extends Component {
             className: 'chat__input',
         });
         input.setAttribute('placeholder', 'Write your message...');
+        input.setAttribute('disabled', 'true');
         const submit = new Component({
             tag: 'button',
             className: 'chat__submit button',
             text: 'submit',
         });
         submit.setAttribute('type', 'submit');
+        submit.setAttribute('disabled', 'true');
         inputWrapper.appendChildren([input, submit]);
         this.appendChildren([inputWrapper]);
     }

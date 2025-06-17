@@ -39,10 +39,10 @@
     padding: var(--padding-small);
     height: 30px;
     transition: all 0.3s ease;
-    &:hover {
+    &:hover:not(:disabled) {
         border: 2px solid var(--black);
     }
-    &:focus {
+    &:focus:not(:disabled) {
         height: 50px;
     }
 }
