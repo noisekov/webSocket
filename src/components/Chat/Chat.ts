@@ -2,6 +2,18 @@ import AppState from '../../utils/AppState';
 import WebSocketService from '../../utils/WebSoketService';
 import Component from '../Component';
 
+interface messageDataI {
+    id: string;
+    from: string;
+    to: string;
+    text: string;
+    datetime: number;
+    status: {
+        isDelivered: boolean;
+        isReaded: boolean;
+        isEdited: boolean;
+    };
+}
 export class Chat extends Component {
     private appState;
     private msgLength;
@@ -39,9 +51,14 @@ export class Chat extends Component {
         const chat = new Component({
             tag: 'div',
             className: 'chat__window',
+        });
+        const mesageWrapper = new Component({
+            tag: 'div',
+            className: 'chat__window-wrapper',
             text: 'Select the user to send the message to...',
         });
-        this.appState.setState({ chat_content: chat });
+        chat.appendChildren([mesageWrapper]);
+        this.appState.setState({ chat_content: mesageWrapper });
         this.appendChildren([chat]);
     }
 
@@ -89,18 +106,32 @@ export class Chat extends Component {
                     },
                 },
             });
+
+            (textarea.getNode() as HTMLTextAreaElement).value = '';
+            submit.setAttribute('disabled', 'true');
         });
 
         this.webSocketService.onMessage((event) => {
             const typeData = JSON.parse(event.data);
 
-            console.log(typeData);
-            // if (typeData.type === 'MSG_SEND') {
-            //     this.appState.setState({
-            //         chat_content: typeData,
-            //     });
-            // }
+            if (typeData.type === 'MSG_SEND') {
+                const messageData = typeData.payload.message;
+                this.renderMessage(messageData);
+            }
         });
+    }
+
+    private renderMessage(messageData: messageDataI) {
+        const chatComponent = this.appState.getState().chat_content;
+        chatComponent.setTextContent('');
+        const message = new Component({
+            tag: 'div',
+            className: 'chat__window-message',
+            text: messageData.text,
+        });
+
+        chatComponent.appendChildren([message]);
+        chatComponent.appendChildren([...chatComponent.getChildren()]);
     }
 
     private textAreaHandler(submit: Component, textarea: Component) {
