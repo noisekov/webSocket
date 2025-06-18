@@ -7,6 +7,7 @@ export default class WebSocketService {
     private connection: WebSocket;
     private messageHandlers: ((event: MessageEvent) => void)[] = [];
     private data: WebSocketDataI;
+    private static instance: WebSocketService | null = null;
 
     constructor() {
         this.connection = new WebSocket('ws://localhost:4000');
@@ -19,6 +20,13 @@ export default class WebSocketService {
                   "isLogined": false
                 }`
         );
+    }
+
+    public static getInstance(): WebSocketService {
+        if (!WebSocketService.instance) {
+            WebSocketService.instance = new WebSocketService();
+        }
+        return WebSocketService.instance;
     }
 
     private setupEventListeners() {

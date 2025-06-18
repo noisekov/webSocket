@@ -1,12 +1,17 @@
 import AppState from '../../utils/AppState';
+import WebSocketService from '../../utils/WebSoketService';
 import Component from '../Component';
 
 export class Chat extends Component {
     private appState;
+    private msgLength;
+    private webSocketService: WebSocketService;
     constructor() {
         super({ tag: 'div', className: 'chat' });
         this.appState = AppState.getInstance();
+        this.webSocketService = WebSocketService.getInstance();
         this.render();
+        this.msgLength = 0;
     }
 
     private renderHeader() {
@@ -49,9 +54,9 @@ export class Chat extends Component {
             tag: 'textarea',
             className: 'chat__textarea',
         });
-        this.appState.setState({ textarea });
         textarea.setAttribute('placeholder', 'Write your message...');
         textarea.setAttribute('disabled', 'true');
+        this.appState.setState({ textarea });
         const submit = new Component({
             tag: 'button',
             className: 'chat__submit button',
@@ -61,6 +66,54 @@ export class Chat extends Component {
         submit.setAttribute('disabled', 'true');
         inputWrapper.appendChildren([textarea, submit]);
         this.appendChildren([inputWrapper]);
+        this.submitHandler(submit, textarea);
+        this.textAreaHandler(submit, textarea);
+    }
+
+    private submitHandler(submit: Component, textarea: Component) {
+        submit.addListener('click', (evt) => {
+            evt.preventDefault();
+            const valueTextArea = (textarea.getNode() as HTMLTextAreaElement)
+                .value;
+            const userTo = this.appState
+                .getState()
+                .chosen_user.getNode().textContent;
+
+            this.webSocketService.send({
+                id: '1',
+                type: 'MSG_SEND',
+                payload: {
+                    message: {
+                        to: userTo,
+                        text: valueTextArea,
+                    },
+                },
+            });
+        });
+
+        this.webSocketService.onMessage((event) => {
+            const typeData = JSON.parse(event.data);
+
+            console.log(typeData);
+            // if (typeData.type === 'MSG_SEND') {
+            //     this.appState.setState({
+            //         chat_content: typeData,
+            //     });
+            // }
+        });
+    }
+
+    private textAreaHandler(submit: Component, textarea: Component) {
+        textarea.addListener('input', (evt) => {
+            const value = (evt.target as HTMLInputElement).value;
+
+            if (value.length > this.msgLength) {
+                submit.removeAttribute('disabled');
+
+                return;
+            }
+            submit.setAttribute('disabled', 'true');
+        });
     }
 
     render() {

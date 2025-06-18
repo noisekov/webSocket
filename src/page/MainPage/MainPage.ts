@@ -20,7 +20,7 @@ export default class MainPage {
             tag: 'ul',
             className: 'users',
         });
-        this.webSocketService = new WebSocketService();
+        this.webSocketService = WebSocketService.getInstance();
         this.currentUserData = JSON.parse(
             sessionStorage.getItem('noisekov-funchat') ||
                 '{"login": "", "password": "", "isLogined": false}'
