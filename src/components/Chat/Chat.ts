@@ -126,9 +126,25 @@ export class Chat extends Component {
         chatComponent.setTextContent('');
         const message = new Component({
             tag: 'div',
-            className: 'chat__window-message',
-            text: messageData.text,
+            className: 'message',
         });
+        const formatDate = new Date(messageData.datetime).toLocaleString();
+        const messageHeader = new Component({
+            tag: 'div',
+            className: 'message__header',
+        });
+        messageHeader.appendChildren([
+            new Component({ tag: 'span', text: 'you' }),
+            new Component({ tag: 'span', text: formatDate }),
+        ]);
+        message.appendChildren([
+            messageHeader,
+            new Component({
+                tag: 'span',
+                className: 'message__text',
+                text: messageData.text,
+            }),
+        ]);
 
         chatComponent.appendChildren([message]);
         chatComponent.appendChildren([...chatComponent.getChildren()]);
