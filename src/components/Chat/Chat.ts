@@ -18,12 +18,17 @@ export class Chat extends Component {
     private appState;
     private msgLength;
     private webSocketService: WebSocketService;
+    private chatWindow: Component;
     constructor() {
         super({ tag: 'div', className: 'chat' });
         this.appState = AppState.getInstance();
         this.webSocketService = WebSocketService.getInstance();
-        this.render();
+        this.chatWindow = new Component({
+            tag: 'div',
+            className: 'chat__window',
+        });
         this.msgLength = 0;
+        this.render();
     }
 
     private renderHeader() {
@@ -48,18 +53,14 @@ export class Chat extends Component {
     }
 
     private renderChatWindow() {
-        const chat = new Component({
-            tag: 'div',
-            className: 'chat__window',
-        });
         const mesageWrapper = new Component({
             tag: 'div',
             className: 'chat__window-wrapper',
             text: 'Select the user to send the message to...',
         });
-        chat.appendChildren([mesageWrapper]);
+        this.chatWindow.appendChildren([mesageWrapper]);
         this.appState.setState({ chat_content: mesageWrapper });
-        this.appendChildren([chat]);
+        this.appendChildren([this.chatWindow]);
     }
 
     private renderInput() {
@@ -121,6 +122,11 @@ export class Chat extends Component {
         });
     }
 
+    private scrollDown() {
+        const node = this.chatWindow.getNode() as HTMLElement;
+        node.scrollTop = node.scrollHeight;
+    }
+
     private renderMessage(messageData: messageDataI) {
         const chatComponent = this.appState.getState().chat_content;
         chatComponent.setTextContent('');
@@ -148,6 +154,7 @@ export class Chat extends Component {
 
         chatComponent.appendChildren([message]);
         chatComponent.appendChildren([...chatComponent.getChildren()]);
+        this.scrollDown();
     }
 
     private textAreaHandler(submit: Component, textarea: Component) {
