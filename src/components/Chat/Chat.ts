@@ -91,25 +91,14 @@ export class Chat extends Component {
     private submitHandler(submit: Component, textarea: Component) {
         submit.addListener('click', (evt) => {
             evt.preventDefault();
-            const valueTextArea = (textarea.getNode() as HTMLTextAreaElement)
-                .value;
-            const userTo = this.appState
-                .getState()
-                .chosen_user.getNode().textContent;
+            this.sendMessage(submit, textarea);
+        });
 
-            this.webSocketService.send({
-                id: '1',
-                type: 'MSG_SEND',
-                payload: {
-                    message: {
-                        to: userTo,
-                        text: valueTextArea,
-                    },
-                },
-            });
-
-            (textarea.getNode() as HTMLTextAreaElement).value = '';
-            submit.setAttribute('disabled', 'true');
+        window.addEventListener('keypress', (evt) => {
+            if (evt.key === 'Enter') {
+                evt.preventDefault();
+                this.sendMessage(submit, textarea);
+            }
         });
 
         this.webSocketService.onMessage((event) => {
@@ -120,6 +109,31 @@ export class Chat extends Component {
                 this.renderMessage(messageData);
             }
         });
+    }
+
+    sendMessage(submit: Component, textarea: Component) {
+        const valueTextArea = (textarea.getNode() as HTMLTextAreaElement).value;
+
+        if (!valueTextArea) {
+            return;
+        }
+
+        const userTo = this.appState
+            .getState()
+            .chosen_user.getNode().textContent;
+        this.webSocketService.send({
+            id: '1',
+            type: 'MSG_SEND',
+            payload: {
+                message: {
+                    to: userTo,
+                    text: valueTextArea,
+                },
+            },
+        });
+
+        (textarea.getNode() as HTMLTextAreaElement).value = '';
+        submit.setAttribute('disabled', 'true');
     }
 
     private scrollDown() {
