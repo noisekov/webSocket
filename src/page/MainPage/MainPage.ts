@@ -115,9 +115,9 @@ export default class MainPage {
                             },
                         },
                     });
+                    sessionStorage.clear();
                     new AppRouter().setPath('login');
                     new ContentRender().render();
-                    sessionStorage.clear();
                 },
             }),
         ]);

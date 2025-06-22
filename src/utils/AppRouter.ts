@@ -8,11 +8,38 @@ export default class AppRouter {
         window.onpopstate = () => new ContentRender().render();
     }
 
-    getPath() {
+    public getPath() {
+        this.checkPrivatePath();
+
         return this.path;
     }
 
-    setPath(path: string) {
+    private checkPrivatePath() {
+        const currentUserLoggedIn = JSON.parse(
+            sessionStorage.getItem('noisekov-funchat') ||
+                '{"login": "", "password": "", "isLogined": false}'
+        );
+
+        switch (this.path) {
+            case '/login':
+                currentUserLoggedIn.isLogined
+                    ? ((this.path = '/main'), this.setPath('main'))
+                    : ((this.path = '/'), this.setPath('login'));
+                break;
+            case '/':
+                currentUserLoggedIn.isLogined
+                    ? ((this.path = '/main'), this.setPath('main'))
+                    : ((this.path = '/'), this.setPath('login'));
+                break;
+            case '/main':
+                currentUserLoggedIn.isLogined
+                    ? ((this.path = '/main'), this.setPath('main'))
+                    : ((this.path = '/'), this.setPath('login'));
+                break;
+        }
+    }
+
+    public setPath(path: string) {
         history.replaceState({}, '', path);
     }
 }
