@@ -84,6 +84,15 @@ export default class MainPage {
         headerChatStatus.addClass(status);
         chatComponent.setTextContent('Write your first message...');
         textareaComponent.removeAttribute('disabled');
+        this.webSocketService.send({
+            id: '1',
+            type: 'MSG_FROM_USER',
+            payload: {
+                user: {
+                    login: clickedUserName,
+                },
+            },
+        });
     }
 
     renderHeader() {

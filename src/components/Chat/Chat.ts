@@ -104,9 +104,17 @@ export class Chat extends Component {
         this.webSocketService.onMessage((event) => {
             const typeData = JSON.parse(event.data);
 
+            if (
+                typeData.type === 'MSG_FROM_USER' &&
+                typeData.payload.messages.length
+            ) {
+                const messageData = typeData.payload.messages;
+                this.renderMessages(messageData);
+            }
+
             if (typeData.type === 'MSG_SEND') {
                 const messageData = typeData.payload.message;
-                this.renderMessage(messageData);
+                this.renderMessages(messageData);
             }
         });
     }
@@ -118,19 +126,19 @@ export class Chat extends Component {
             return;
         }
 
-        const userTo = this.appState
-            .getState()
-            .chosen_user.getNode().textContent;
-        this.webSocketService.send({
-            id: '1',
-            type: 'MSG_SEND',
-            payload: {
-                message: {
-                    to: userTo,
-                    text: valueTextArea,
-                },
-            },
-        });
+        // const userTo = this.appState
+        //     .getState()
+        //     .chosen_user.getNode().textContent;
+        // this.webSocketService.send({
+        //     id: '1',
+        //     type: 'MSG_SEND',
+        //     payload: {
+        //         message: {
+        //             to: userTo,
+        //             text: valueTextArea,
+        //         },
+        //     },
+        // });
 
         (textarea.getNode() as HTMLTextAreaElement).value = '';
         submit.setAttribute('disabled', 'true');
@@ -141,9 +149,25 @@ export class Chat extends Component {
         node.scrollTop = node.scrollHeight;
     }
 
-    private renderMessage(messageData: messageDataI) {
+    private renderMessages(messagesData: messageDataI | messageDataI[]) {
         const chatComponent = this.appState.getState().chat_content;
         chatComponent.setTextContent('');
+        chatComponent.destroyChildren();
+        const messages = Array.isArray(messagesData)
+            ? messagesData
+            : [messagesData];
+        messages.forEach((messageData) =>
+            this.createTemplate(messageData, chatComponent)
+        );
+        chatComponent.appendChildren([...chatComponent.getChildren()]);
+        this.scrollDown();
+    }
+
+    private createTemplate(
+        messageData: messageDataI,
+        chatComponent: Component
+    ) {
+        console.log(messageData);
         const message = new Component({
             tag: 'div',
             className: 'message',
@@ -165,10 +189,7 @@ export class Chat extends Component {
                 text: messageData.text,
             }),
         ]);
-
         chatComponent.appendChildren([message]);
-        chatComponent.appendChildren([...chatComponent.getChildren()]);
-        this.scrollDown();
     }
 
     private textAreaHandler(submit: Component, textarea: Component) {
