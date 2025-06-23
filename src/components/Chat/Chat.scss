@@ -72,6 +72,9 @@
     border-radius: var(--radius-standart);
     text-align: left;
     gap: 5px;
+    &.message__not-me {
+        align-self: start;
+    }
 }
 
 .chat__window-wrapper {

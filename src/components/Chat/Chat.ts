@@ -156,8 +156,11 @@ export class Chat extends Component {
         const messages = Array.isArray(messagesData)
             ? messagesData
             : [messagesData];
+        const chosenUsers = this.appState
+            .getState()
+            .chosen_user.getNode().textContent;
         messages.forEach((messageData) =>
-            this.createTemplate(messageData, chatComponent)
+            this.createTemplate(messageData, chatComponent, chosenUsers)
         );
         chatComponent.appendChildren([...chatComponent.getChildren()]);
         this.scrollDown();
@@ -165,20 +168,25 @@ export class Chat extends Component {
 
     private createTemplate(
         messageData: messageDataI,
-        chatComponent: Component
+        chatComponent: Component,
+        chosenUsers: string | null
     ) {
-        console.log(messageData);
+        const isMyMessage = messageData.from !== chosenUsers;
         const message = new Component({
             tag: 'div',
-            className: 'message',
+            className: `message ${isMyMessage ? '' : 'message__not-me'}`,
         });
         const formatDate = new Date(messageData.datetime).toLocaleString();
         const messageHeader = new Component({
             tag: 'div',
             className: 'message__header',
         });
+        const fromWhoMessage = new Component({
+            tag: 'span',
+            text: isMyMessage ? 'you' : chosenUsers,
+        });
         messageHeader.appendChildren([
-            new Component({ tag: 'span', text: 'you' }),
+            fromWhoMessage,
             new Component({ tag: 'span', text: formatDate }),
         ]);
         message.appendChildren([
