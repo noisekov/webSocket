@@ -114,7 +114,7 @@ export class Chat extends Component {
 
             if (typeData.type === 'MSG_SEND') {
                 const messageData = typeData.payload.message;
-                this.renderMessages(messageData);
+                this.addMessage(messageData);
             }
         });
     }
@@ -126,19 +126,19 @@ export class Chat extends Component {
             return;
         }
 
-        // const userTo = this.appState
-        //     .getState()
-        //     .chosen_user.getNode().textContent;
-        // this.webSocketService.send({
-        //     id: '1',
-        //     type: 'MSG_SEND',
-        //     payload: {
-        //         message: {
-        //             to: userTo,
-        //             text: valueTextArea,
-        //         },
-        //     },
-        // });
+        const userTo = this.appState
+            .getState()
+            .chosen_user.getNode().textContent;
+        this.webSocketService.send({
+            id: '1',
+            type: 'MSG_SEND',
+            payload: {
+                message: {
+                    to: userTo,
+                    text: valueTextArea,
+                },
+            },
+        });
 
         (textarea.getNode() as HTMLTextAreaElement).value = '';
         submit.setAttribute('disabled', 'true');
@@ -162,6 +162,17 @@ export class Chat extends Component {
         messages.forEach((messageData) =>
             this.createTemplate(messageData, chatComponent, chosenUsers)
         );
+        chatComponent.appendChildren([...chatComponent.getChildren()]);
+        this.scrollDown();
+    }
+
+    private addMessage(messagesData: messageDataI) {
+        const chatComponent = this.appState.getState().chat_content;
+        chatComponent.setTextContent('');
+        const chosenUsers = this.appState
+            .getState()
+            .chosen_user.getNode().textContent;
+        this.createTemplate(messagesData, chatComponent, chosenUsers);
         chatComponent.appendChildren([...chatComponent.getChildren()]);
         this.scrollDown();
     }
