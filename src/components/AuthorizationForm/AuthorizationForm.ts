@@ -1,8 +1,7 @@
-import ContentRender from '../../utils/ContentRender';
-import AppRouter from '../../utils/AppRouter';
 import WebSoketService from '../../utils/WebSoketService';
 import Component from '../Component';
 import AppState, { AppStateI } from '../../utils/AppState';
+import NavigationFacade from '../../utils/NavigationFacade';
 
 export default class AuthorizationForm extends Component {
     private inputLogin;
@@ -89,8 +88,7 @@ export default class AuthorizationForm extends Component {
                     this.appState.setState({
                         users_active: typeData,
                     });
-                    new AppRouter().setPath('main');
-                    new ContentRender().render();
+                    new NavigationFacade().navigateTo('main');
                 }
             });
         });

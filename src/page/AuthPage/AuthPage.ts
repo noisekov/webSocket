@@ -1,9 +1,8 @@
 import ButtonComponent from '../../components/ButtonComponent';
 import Component from '../../components/Component';
 import AuthorizationForm from '../../components/AuthorizationForm/AuthorizationForm';
-import AppRouter from '../../utils/AppRouter';
-import ContentRender from '../../utils/ContentRender';
 import AppState from '../../utils/AppState';
+import NavigationFacade from '../../utils/NavigationFacade';
 
 export default class AuthPage extends Component {
     constructor() {
@@ -31,8 +30,7 @@ export default class AuthPage extends Component {
                 onClick: (evt) => {
                     evt.preventDefault();
                     content.destroy();
-                    new AppRouter().setPath('about');
-                    new ContentRender().render();
+                    new NavigationFacade().navigateTo('about');
                 },
             }),
         ]);

@@ -3,9 +3,8 @@ import ButtonComponent from '../../components/ButtonComponent';
 import { Chat } from '../../components/Chat/Chat';
 import Component from '../../components/Component';
 import { SearchInput } from '../../components/SearchInput/SearchInput';
-import AppRouter from '../../utils/AppRouter';
 import AppState, { AppStateI } from '../../utils/AppState';
-import ContentRender from '../../utils/ContentRender';
+import NavigationFacade from '../../utils/NavigationFacade';
 import WebSocketService from '../../utils/WebSoketService';
 
 export default class MainPage {
@@ -125,8 +124,7 @@ export default class MainPage {
                         },
                     });
                     sessionStorage.clear();
-                    new AppRouter().setPath('login');
-                    new ContentRender().render();
+                    new NavigationFacade().navigateTo('login');
                 },
             }),
         ]);

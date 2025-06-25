@@ -1,7 +1,6 @@
 import ButtonComponent from '../../components/ButtonComponent';
 import Component from '../../components/Component';
-import ContentRender from '../../utils/ContentRender';
-import AppRouter from '../../utils/AppRouter';
+import NavigationFacade from '../../utils/NavigationFacade';
 
 export default class AboutPage {
     render() {
@@ -22,8 +21,7 @@ export default class AboutPage {
                 text: 'Back',
                 onClick: () => {
                     content.destroy();
-                    new AppRouter().setPath('login');
-                    new ContentRender().render();
+                    new NavigationFacade().navigateTo('login');
                     window.history.go(-1);
                 },
             }),
