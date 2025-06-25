@@ -13,7 +13,7 @@ export default class ContentRender {
         document.querySelector('.main')?.remove();
     }
 
-    render() {
+    public render() {
         const currentPath = new AppRouter().getPath() as RoutePaths;
 
         if (currentPath) {

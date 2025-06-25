@@ -9,7 +9,7 @@ export default class NavigationFacade {
         this.renderer = new ContentRender();
     }
 
-    navigateTo(path: string) {
+    public navigateTo(path: string) {
         this.router.setPath(path);
         this.renderer.render();
     }

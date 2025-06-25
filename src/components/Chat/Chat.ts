@@ -168,10 +168,13 @@ export class Chat extends Component {
 
     private addMessage(messagesData: messageDataI) {
         const chatComponent = this.appState.getState().chat_content;
-        chatComponent.setTextContent('');
         const chosenUsers = this.appState
             .getState()
             .chosen_user.getNode().textContent;
+
+        if (!chosenUsers) return;
+
+        chatComponent.setTextContent('');
         this.createTemplate(messagesData, chatComponent, chosenUsers);
         chatComponent.appendChildren([...chatComponent.getChildren()]);
         this.scrollDown();
