@@ -37,6 +37,34 @@ export default class MainPage {
                     users_active: typeData,
                 });
             }
+
+            if (typeData.type === 'USER_EXTERNAL_LOGOUT') {
+                this.appState
+                    .getState()
+                    .users_active.payload.users.forEach((user: any) => {
+                        if (user.login === typeData.payload.user.login) {
+                            user.isLogined = false;
+                        }
+                    });
+                this.updateUserList();
+            }
+
+            if (typeData.type === 'USER_EXTERNAL_LOGIN') {
+                const state =
+                    this.appState.getState().users_active.payload.users;
+                const userExist = state.find(
+                    (user: { login: string }) =>
+                        user.login === typeData.payload.user.login
+                );
+                state.forEach((user: { login: string; isLogined: boolean }) => {
+                    if (user.login === typeData.payload.user.login) {
+                        user.isLogined = true;
+                    }
+                });
+                this.updateUserList();
+                if (userExist) return;
+                this.appState.addNewUser(typeData.payload.user);
+            }
         });
     }
 
@@ -84,7 +112,7 @@ export default class MainPage {
         chatComponent.setTextContent('Write your first message...');
         textareaComponent.removeAttribute('disabled');
         this.webSocketService.send({
-            id: '1',
+            id: null,
             type: 'MSG_FROM_USER',
             payload: {
                 user: {
@@ -113,8 +141,9 @@ export default class MainPage {
                 text: 'Exit',
                 onClick: () => {
                     const { login, password } = this.currentUserData;
+                    sessionStorage.clear();
                     this.webSocketService.send({
-                        id: '1',
+                        id: null,
                         type: 'USER_LOGOUT',
                         payload: {
                             user: {
@@ -123,7 +152,6 @@ export default class MainPage {
                             },
                         },
                     });
-                    sessionStorage.clear();
                     new NavigationFacade().navigateTo('login');
                 },
             }),

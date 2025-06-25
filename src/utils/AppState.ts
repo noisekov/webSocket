@@ -25,7 +25,7 @@ export default class AppState {
     private constructor() {
         this.state = {
             users_active: {
-                payload: { users: [] },
+                payload: { users: [] as any[] },
             },
             users_before_filter: [],
             chosen_user: new Component({ tag: 'div', className: 'chat__user' }),
@@ -59,6 +59,13 @@ export default class AppState {
 
     public setState(newState: any) {
         this.state = { ...this.state, ...newState };
+        this.notifySubscribers();
+
+        return this.state;
+    }
+
+    public addNewUser(user: { login: string; isLogined: boolean }) {
+        this.state.users_active.payload.users.push(user);
         this.notifySubscribers();
 
         return this.state;

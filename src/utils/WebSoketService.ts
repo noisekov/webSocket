@@ -46,7 +46,7 @@ export default class WebSocketService {
         });
 
         this.send({
-            id: '1',
+            id: null,
             type: 'USER_ACTIVE',
             payload: null,
         });

@@ -130,7 +130,7 @@ export class Chat extends Component {
             .getState()
             .chosen_user.getNode().textContent;
         this.webSocketService.send({
-            id: '1',
+            id: null,
             type: 'MSG_SEND',
             payload: {
                 message: {
