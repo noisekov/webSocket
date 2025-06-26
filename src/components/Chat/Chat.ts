@@ -19,6 +19,7 @@ export class Chat extends Component {
     private msgLength;
     private webSocketService: WebSocketService;
     private chatWindow: Component;
+    private currentUserDataLogin;
     constructor() {
         super({ tag: 'div', className: 'chat' });
         this.appState = AppState.getInstance();
@@ -28,6 +29,10 @@ export class Chat extends Component {
             className: 'chat__window',
         });
         this.msgLength = 0;
+        this.currentUserDataLogin = JSON.parse(
+            sessionStorage.getItem('noisekov-funchat') ||
+                '{"login": "", "password": "", "isLogined": false}'
+        ).login;
         this.render();
     }
 
@@ -166,12 +171,19 @@ export class Chat extends Component {
     }
 
     private addMessage(messagesData: messageDataI) {
+        const { from: messageFrom, to: messageTo } = messagesData;
         const chatComponent = this.appState.getState().chat_content;
         const chosenUsers = this.appState
             .getState()
             .chosen_user.getNode().textContent;
+        // if authrizen user and chosen user dont match with message sender or recipient
+        const isPossibleDisplayMessageInChat =
+            (this.currentUserDataLogin === messageFrom &&
+                chosenUsers === messageTo) ||
+            (this.currentUserDataLogin === messageTo &&
+                chosenUsers === messageFrom);
 
-        if (!chosenUsers) return;
+        if (!chosenUsers || !isPossibleDisplayMessageInChat) return;
 
         chatComponent.getChildren().length
             ? null
