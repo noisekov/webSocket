@@ -162,7 +162,6 @@ export class Chat extends Component {
         messages.forEach((messageData) =>
             this.createTemplate(messageData, chatComponent, chosenUsers)
         );
-        chatComponent.appendChildren([...chatComponent.getChildren()]);
         this.scrollDown();
     }
 
@@ -174,9 +173,10 @@ export class Chat extends Component {
 
         if (!chosenUsers) return;
 
-        chatComponent.setTextContent('');
+        chatComponent.getChildren().length
+            ? null
+            : chatComponent.setTextContent('');
         this.createTemplate(messagesData, chatComponent, chosenUsers);
-        chatComponent.appendChildren([...chatComponent.getChildren()]);
         this.scrollDown();
     }
 
@@ -211,7 +211,7 @@ export class Chat extends Component {
                 text: messageData.text,
             }),
         ]);
-        chatComponent.appendChildren([message]);
+        chatComponent.append(message);
     }
 
     private textAreaHandler(submit: Component, textarea: Component) {

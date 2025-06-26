@@ -88,7 +88,8 @@ export default class MainPage {
                 });
                 component.addListener('click', () => {
                     const clickedUserName = component.getNode().textContent;
-
+                    const chatComponent = this.appState.getState().chat_content;
+                    chatComponent.destroyChildren();
                     this.handlerChosenUser(component, clickedUserName);
                 });
                 return component;
