@@ -36,6 +36,14 @@ export default class AppRouter {
                     ? ((this.path = '/main'), this.setPath('main'))
                     : ((this.path = '/'), this.setPath('login'));
                 break;
+            case '/about':
+                (this.path = '/about'), this.setPath('about');
+                break;
+            default:
+                currentUserLoggedIn.isLogined
+                    ? ((this.path = '/main'), this.setPath('main'))
+                    : ((this.path = '/'), this.setPath('login'));
+                break;
         }
     }
 
