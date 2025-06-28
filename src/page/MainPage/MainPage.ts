@@ -19,13 +19,14 @@ export default class MainPage {
             tag: 'ul',
             className: 'users',
         });
-        this.webSocketService = WebSocketService.getInstance();
         this.currentUserData = JSON.parse(
             sessionStorage.getItem('noisekov-funchat') ||
                 '{"login": "", "password": "", "isLogined": false}'
         );
-        this.setupStateSubscription();
+        this.webSocketService = WebSocketService.getInstance();
+        this.webSocketService.initializeConnection();
         this.setupWebSocketListeners();
+        this.setupStateSubscription();
     }
 
     private setupWebSocketListeners(): void {

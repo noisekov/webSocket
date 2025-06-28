@@ -1,7 +1,7 @@
-import WebSoketService from '../../utils/WebSoketService';
 import Component from '../Component';
 import AppState, { AppStateI } from '../../utils/AppState';
 import NavigationFacade from '../../utils/NavigationFacade';
+import WebSocketService from '../../utils/WebSoketService';
 
 export default class AuthorizationForm extends Component {
     private inputLogin;
@@ -13,6 +13,7 @@ export default class AuthorizationForm extends Component {
     private isPasswordValid;
     private formComponent;
     private appState;
+    private webSocketService;
     constructor() {
         super({
             tag: 'fieldset',
@@ -44,6 +45,7 @@ export default class AuthorizationForm extends Component {
         this.isLoginValid = false;
         this.isPasswordValid = false;
         this.appState = AppState.getInstance();
+        this.webSocketService = WebSocketService.getInstance();
         this.formComponent = (this.appState.getState() as AppStateI).content;
         this.updateInputLoginComponents();
         this.updateInputPasswordComponents();
@@ -81,7 +83,9 @@ export default class AuthorizationForm extends Component {
                   "isLogined": true
                 }`
             );
-            new WebSoketService().onMessage((event) => {
+
+            this.webSocketService.initializeConnection();
+            this.webSocketService.onMessage((event) => {
                 const typeData = JSON.parse(event.data);
 
                 if (typeData.type === 'USER_ACTIVE') {

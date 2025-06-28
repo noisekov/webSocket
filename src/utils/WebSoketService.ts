@@ -1,6 +1,7 @@
 interface WebSocketDataI {
     login: string;
     password: string;
+    isLogined: boolean;
 }
 
 export default class WebSocketService {
@@ -8,18 +9,16 @@ export default class WebSocketService {
     private messageHandlers: ((event: MessageEvent) => void)[] = [];
     private data: WebSocketDataI;
     private static instance: WebSocketService | null = null;
-
+    private isConnected: boolean;
     constructor() {
         this.connection = new WebSocket('ws://localhost:4000');
         this.setupEventListeners();
-        this.data = JSON.parse(
-            sessionStorage.getItem('noisekov-funchat') ||
-                `{
-                  "login": "",
-                  "password": "",
-                  "isLogined": false
-                }`
-        );
+        this.data = {
+            login: '',
+            password: '',
+            isLogined: false,
+        };
+        this.isConnected = false;
     }
 
     public static getInstance(): WebSocketService {
@@ -30,7 +29,6 @@ export default class WebSocketService {
     }
 
     private setupEventListeners() {
-        this.connection.addEventListener('open', this.handleOpen.bind(this));
         this.connection.addEventListener('error', this.handleError.bind(this));
         this.connection.addEventListener('close', this.handleClose.bind(this));
         this.connection.addEventListener('message', (event) => {
@@ -38,9 +36,35 @@ export default class WebSocketService {
         });
     }
 
-    private handleOpen() {
+    public initializeConnection() {
+        if (this.isConnected) return;
+
+        this.data = JSON.parse(
+            sessionStorage.getItem('noisekov-funchat') ||
+                `{
+              "login": "",
+              "password": "",
+              "isLogined": false
+            }`
+        );
+
+        if (this.connection.readyState === WebSocket.OPEN) {
+            this.sendInitialMessages();
+            this.isConnected = true;
+        } else {
+            this.connection.addEventListener(
+                'open',
+                () => {
+                    this.sendInitialMessages();
+                },
+                { once: true }
+            );
+        }
+    }
+
+    private sendInitialMessages() {
         this.send({
-            id: `1`,
+            id: null,
             type: 'USER_LOGIN',
             payload: { user: this.data },
         });
@@ -57,6 +81,7 @@ export default class WebSocketService {
     }
 
     private handleClose(event: CloseEvent) {
+        this.isConnected = false;
         console.log('WebSocket closed:', event.reason);
     }
 
