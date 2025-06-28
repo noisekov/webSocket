@@ -13,6 +13,7 @@ export interface AppStateI {
     chosen_user_status: Component;
     chat_content: Component;
     textarea: Component;
+    mainTemplate: Component;
 }
 
 type Subscriber = () => void;
@@ -42,6 +43,7 @@ export default class AppState {
                 tag: 'textarea',
                 className: 'chat__textarea',
             }),
+            mainTemplate: new Component({ className: 'main' }),
         };
     }
 

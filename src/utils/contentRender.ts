@@ -3,6 +3,7 @@ import AboutPage from '../page/AboutPage/AboutPage';
 import AuthPage from '../page/AuthPage/AuthPage';
 import MainPage from '../page/MainPage/MainPage';
 import AppRouter from './AppRouter';
+import AppState from './AppState';
 
 type RoutePaths = '/login' | '/' | '/about' | '/main';
 
@@ -10,7 +11,7 @@ export default class ContentRender {
     body: HTMLBodyElement | null;
     constructor() {
         this.body = document.querySelector('body');
-        document.querySelector('.main')?.remove();
+        AppState.getInstance().getState().mainTemplate.getNode().remove();
     }
 
     public render() {
