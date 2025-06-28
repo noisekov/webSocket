@@ -31,6 +31,7 @@ export default class MainPage {
     private setupWebSocketListeners(): void {
         this.webSocketService.onMessage(async (event) => {
             const typeData = JSON.parse(event.data);
+            const { user } = typeData.payload;
 
             if (typeData.type === 'USER_ACTIVE') {
                 this.appState.setState({
@@ -41,9 +42,9 @@ export default class MainPage {
             if (typeData.type === 'USER_EXTERNAL_LOGOUT') {
                 this.appState
                     .getState()
-                    .users_active.payload.users.forEach((user: any) => {
-                        if (user.login === typeData.payload.user.login) {
-                            user.isLogined = false;
+                    .users_active.payload.users.forEach((activeUser: any) => {
+                        if (activeUser.login === user.login) {
+                            activeUser.isLogined = false;
                         }
                     });
                 this.updateUserList();
@@ -52,18 +53,16 @@ export default class MainPage {
             if (typeData.type === 'USER_EXTERNAL_LOGIN') {
                 const state =
                     this.appState.getState().users_active.payload.users;
-                const userExist = state.find(
-                    (user: { login: string }) =>
-                        user.login === typeData.payload.user.login
-                );
-                state.forEach((user: { login: string; isLogined: boolean }) => {
-                    if (user.login === typeData.payload.user.login) {
-                        user.isLogined = true;
+                const userExists = state.some((existingUser) => {
+                    if (existingUser.login === user.login) {
+                        existingUser.isLogined = true;
+                        return true;
                     }
+                    return false;
                 });
                 this.updateUserList();
-                if (userExist) return;
-                this.appState.addNewUser(typeData.payload.user);
+                if (userExists) return;
+                this.appState.addNewUser(user);
             }
         });
     }
