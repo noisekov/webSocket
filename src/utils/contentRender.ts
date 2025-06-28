@@ -11,7 +11,7 @@ export default class ContentRender {
     body: HTMLBodyElement | null;
     constructor() {
         this.body = document.querySelector('body');
-        AppState.getInstance().getState().mainTemplate.getNode().remove();
+        AppState.getInstance().getState().mainTemplate.destroy();
     }
 
     public render() {
