@@ -62,8 +62,8 @@ export default class Component {
         this.#node.classList.toggle(className);
     }
 
-    removeClass(className: string) {
-        this.#node.classList.remove(className);
+    removeClass(...className: string[]) {
+        this.#node.classList.remove(...className);
     }
 
     addListener(

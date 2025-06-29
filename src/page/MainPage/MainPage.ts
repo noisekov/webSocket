@@ -111,6 +111,7 @@ export default class MainPage {
         headerChatComponent.setTextContent(clickedUserName || 'unknown');
         const status = component.hasClass('active') ? 'online' : 'offline';
         headerChatStatus.setTextContent(status);
+        headerChatStatus.removeClass('online', 'offline');
         headerChatStatus.addClass(status);
         chatComponent.setTextContent('Write your first message...');
         textareaComponent.removeAttribute('disabled');
