@@ -43,11 +43,13 @@ export default class MainPage {
             if (typeData.type === 'USER_EXTERNAL_LOGOUT') {
                 this.appState
                     .getState()
-                    .users_active.payload.users.forEach((activeUser: any) => {
-                        if (activeUser.login === user.login) {
-                            activeUser.isLogined = false;
+                    .users_active.payload.users.forEach(
+                        (activeUser: { login: string; isLogined: boolean }) => {
+                            if (activeUser.login === user.login) {
+                                activeUser.isLogined = false;
+                            }
                         }
-                    });
+                    );
                 this.updateUserList();
             }
 
