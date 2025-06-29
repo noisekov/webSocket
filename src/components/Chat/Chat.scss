@@ -67,7 +67,6 @@
     align-self: end;
     max-width: 300px;
     padding: var(--radius-small);
-
     background-color: #8b8b8b;
     border-radius: var(--radius-standart);
     text-align: left;
@@ -104,4 +103,26 @@
     border-radius: var(--radius-small);
     word-break: break-word;
     background-color: var(--white);
+}
+
+.context-menu {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    padding: var(--padding-small);
+    margin: 0;
+    list-style-type: none;
+    width: 180px;
+    background-color: var(--gray);
+    border: 2px solid var(--black);
+    border-radius: var(--radius-small);
+}
+
+.context-menu__item {
+    cursor: pointer;
+    padding: var(--padding-small);
+    &:hover {
+        background-color: var(--white);
+        border-radius: var(--radius-small);
+    }
 }

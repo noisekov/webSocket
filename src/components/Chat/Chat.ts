@@ -20,6 +20,7 @@ export class Chat extends Component {
     private webSocketService: WebSocketService;
     private chatWindow: Component;
     private currentUserDataLogin;
+    private mainTemplate: Component;
     constructor() {
         super({ tag: 'div', className: 'chat' });
         this.appState = AppState.getInstance();
@@ -33,7 +34,9 @@ export class Chat extends Component {
             sessionStorage.getItem('noisekov-funchat') ||
                 '{"login": "", "password": "", "isLogined": false}'
         ).login;
+        this.mainTemplate = this.appState.getState().mainTemplate;
         this.render();
+        this.addListeners();
     }
 
     private renderHeader() {
@@ -62,6 +65,9 @@ export class Chat extends Component {
             tag: 'div',
             className: 'chat__window-wrapper',
             text: 'Select the user to send the message to...',
+        });
+        this.chatWindow.addListener('scroll', () => {
+            this.appState.getState().context_menu.destroy();
         });
         this.chatWindow.appendChildren([mesageWrapper]);
         this.appState.setState({ chat_content: mesageWrapper });
@@ -93,6 +99,40 @@ export class Chat extends Component {
         this.textAreaHandler(submit, textarea);
     }
 
+    private addListeners() {
+        window.addEventListener('click', () =>
+            this.appState.getState().context_menu.destroy()
+        );
+        this.mainTemplate.addListener('contextmenu', (evt: Event) => {
+            this.appState.getState().context_menu.destroy();
+            if (
+                !(evt.target as HTMLElement).closest('.message') ||
+                (evt.target as HTMLElement).closest('.message__not-me')
+            )
+                return;
+            evt.preventDefault();
+            this.renderContextMenu(evt as MouseEvent);
+        });
+    }
+
+    private deleteMessage(id: string) {
+        const chatComponents = this.appState.getState().chat_content;
+
+        chatComponents.getChildren().forEach((chatComponent, index) => {
+            if (chatComponent.getNode().id === id) {
+                chatComponent.destroy();
+                chatComponents.getChildren().splice(index, 1);
+                this.appState.setState({
+                    chat_content: chatComponents,
+                });
+            }
+        });
+
+        if (!chatComponents.getChildren().length) {
+            chatComponents.setTextContent('Write your first message...');
+        }
+    }
+
     private submitHandler(submit: Component, textarea: Component) {
         submit.addListener('click', (evt) => {
             evt.preventDefault();
@@ -108,6 +148,9 @@ export class Chat extends Component {
 
         this.webSocketService.onMessage((event) => {
             const typeData = JSON.parse(event.data);
+            if (typeData.type === 'MSG_DELETE') {
+                this.deleteMessage(typeData.payload.message.id);
+            }
 
             if (
                 typeData.type === 'MSG_FROM_USER' &&
@@ -197,12 +240,14 @@ export class Chat extends Component {
         chatComponent: Component,
         chosenUsers: string | null
     ) {
-        const isMyMessage = messageData.from !== chosenUsers;
+        const { from: messageFrom, text, datetime, id } = messageData;
+        const isMyMessage = messageFrom !== chosenUsers;
         const message = new Component({
             tag: 'div',
             className: `message ${isMyMessage ? '' : 'message__not-me'}`,
+            id: id,
         });
-        const formatDate = new Date(messageData.datetime).toLocaleString();
+        const formatDate = new Date(datetime).toLocaleString();
         const messageHeader = new Component({
             tag: 'div',
             className: 'message__header',
@@ -220,10 +265,48 @@ export class Chat extends Component {
             new Component({
                 tag: 'span',
                 className: 'message__text',
-                text: messageData.text,
+                text,
             }),
         ]);
         chatComponent.append(message);
+    }
+
+    private renderContextMenu(evt: MouseEvent) {
+        if (evt.target instanceof HTMLElement) {
+            const rect = evt.target.getBoundingClientRect();
+            const { scrollX, scrollY } = window;
+            const contextMenu = new Component({
+                tag: 'ul',
+                className: 'context-menu',
+            });
+            contextMenu.getNode().style.top = `${rect.top + scrollY}px`;
+            contextMenu.getNode().style.left = `${rect.left + scrollX}px`;
+            const delteBtn = new Component({
+                tag: 'li',
+                className: 'context-menu__item',
+                text: 'Delete',
+            });
+            delteBtn.addListener('click', () => {
+                const messageElement = (evt.target as HTMLElement).closest(
+                    '.message'
+                );
+
+                if (!messageElement) return;
+
+                this.webSocketService.send({
+                    id: null,
+                    type: 'MSG_DELETE',
+                    payload: {
+                        message: {
+                            id: messageElement.id,
+                        },
+                    },
+                });
+            });
+            contextMenu.append(delteBtn);
+            this.appState.getState().mainTemplate.append(contextMenu);
+            this.appState.setState({ context_menu: contextMenu });
+        }
     }
 
     private textAreaHandler(submit: Component, textarea: Component) {

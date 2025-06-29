@@ -14,6 +14,7 @@ export interface AppStateI {
     chat_content: Component;
     textarea: Component;
     mainTemplate: Component;
+    context_menu: Component;
 }
 
 type Subscriber = () => void;
@@ -44,6 +45,10 @@ export default class AppState {
                 className: 'chat__textarea',
             }),
             mainTemplate: new Component({ className: 'main' }),
+            context_menu: new Component({
+                tag: 'ul',
+                className: 'context-menu',
+            }),
         };
     }
 

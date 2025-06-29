@@ -4,11 +4,12 @@ export default class Component {
     listeners: { [key: string]: EventListener };
 
     constructor(
-        { tag = 'div', className = '', text = '' },
+        { tag = 'div', className = '', text = '', id = '' },
         ...children: Component[]
     ) {
         const node = document.createElement(tag);
         node.className = className;
+        node.id = id;
         node.textContent = text;
         this.#node = node;
         this.listeners = {};
