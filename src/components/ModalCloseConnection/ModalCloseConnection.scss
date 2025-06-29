@@ -1,0 +1,45 @@
+.modal-close-connection {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #7c7c7c6c;
+}
+
+.modal-close-connection__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.modal-close-connection__wrapper {
+    background-color: var(--gray);
+    padding: var(--padding-standart);
+    border-radius: var(--radius-standart);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+}
+
+.modal-close-connection__loader {
+    width: 30px;
+    height: 30px;
+    border: 5px dotted var(--white);
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    animation: rotation 2s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

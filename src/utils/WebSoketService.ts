@@ -1,3 +1,5 @@
+import { ModalCloseConnection } from '../components/ModalCloseConnection/ModalCloseConnection';
+
 interface WebSocketDataI {
     login: string;
     password: string;
@@ -19,6 +21,7 @@ export default class WebSocketService {
             isLogined: false,
         };
         this.isConnected = false;
+        document.querySelector('.modal-close-connection')?.remove();
     }
 
     public static getInstance(): WebSocketService {
@@ -82,6 +85,7 @@ export default class WebSocketService {
 
     private handleClose(event: CloseEvent) {
         this.isConnected = false;
+        new ModalCloseConnection().render();
         console.log('WebSocket closed:', event.reason);
     }
 
