@@ -34,6 +34,12 @@ export default class MainPage {
             const typeData = JSON.parse(event.data);
             const { user } = typeData.payload;
 
+            if (typeData.type === 'USER_INACTIVE') {
+                this.appState.setState({
+                    users_inactive: typeData,
+                });
+            }
+
             if (typeData.type === 'USER_ACTIVE') {
                 this.appState.setState({
                     users_active: typeData,
@@ -54,20 +60,23 @@ export default class MainPage {
             }
 
             if (typeData.type === 'USER_EXTERNAL_LOGIN') {
-                const state =
-                    this.appState.getState().users_active.payload.users;
-                const userExists = state.some((existingUser) => {
-                    if (existingUser.login === user.login) {
-                        existingUser.isLogined = true;
-                        return true;
-                    }
-                    return false;
-                });
-                this.updateUserList();
-                if (userExists) return;
-                this.appState.addNewUser(user);
+                this.handlerExternalLogin(user);
             }
         });
+    }
+
+    private handlerExternalLogin(user: { login: string; isLogined: boolean }) {
+        const state = this.appState.getState().users_active.payload.users;
+        const userExists = state.some((existingUser) => {
+            if (existingUser.login === user.login) {
+                existingUser.isLogined = true;
+                return true;
+            }
+            return false;
+        });
+        this.updateUserList();
+        if (userExists) return;
+        this.appState.addNewUser(user);
     }
 
     private setupStateSubscription() {
@@ -77,8 +86,11 @@ export default class MainPage {
     updateUserList() {
         const arrLoginedUsers = (this.appState.getState() as AppStateI)
             .users_active.payload.users;
+        const arrInactiveUsers = (this.appState.getState() as AppStateI)
+            .users_inactive.payload.users;
+        const arrAllUsers = [...arrLoginedUsers, ...arrInactiveUsers];
         this.users.destroyChildren();
-        const userComponents = arrLoginedUsers.flatMap(
+        const userComponents = arrAllUsers.flatMap(
             (user: { login: string; isLogined: boolean }) => {
                 if (user.login === this.currentUserData.login) {
                     return [];
@@ -97,7 +109,6 @@ export default class MainPage {
                 return component;
             }
         );
-
         this.users.appendChildren(userComponents);
     }
 

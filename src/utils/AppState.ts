@@ -8,7 +8,14 @@ export interface AppStateI {
             users: [];
         };
     };
-    users_before_filter: [];
+    users_active_before_filter: [];
+    users_inactive_before_filter: [];
+    users_inactive: {
+        payload: {
+            users: [];
+        };
+    };
+    all_users: [];
     chosen_user: Component;
     chosen_user_status: Component;
     chat_content: Component;
@@ -29,7 +36,11 @@ export default class AppState {
             users_active: {
                 payload: { users: [] as any[] },
             },
-            users_before_filter: [],
+            users_inactive: {
+                payload: { users: [] as any[] },
+            },
+            users_active_before_filter: [],
+            users_inactive_before_filter: [],
             chosen_user: new Component({ tag: 'div', className: 'chat__user' }),
             chosen_user_status: new Component({
                 tag: 'div',

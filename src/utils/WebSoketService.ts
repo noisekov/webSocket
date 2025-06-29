@@ -77,6 +77,12 @@ export default class WebSocketService {
             type: 'USER_ACTIVE',
             payload: null,
         });
+
+        this.send({
+            id: null,
+            type: 'USER_INACTIVE',
+            payload: null,
+        });
     }
 
     private handleError(event: Event) {
