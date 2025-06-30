@@ -11,7 +11,7 @@ export default class WebSocketService {
     private messageHandlers: ((event: MessageEvent) => void)[] = [];
     private data: WebSocketDataI;
     private static instance: WebSocketService | null = null;
-    private isConnected: boolean;
+    public isConnected: boolean;
     constructor() {
         this.connection = new WebSocket('ws://localhost:4000');
         this.setupEventListeners();
