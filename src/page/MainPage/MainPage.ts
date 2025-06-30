@@ -167,6 +167,7 @@ export default class MainPage {
                             },
                         },
                     });
+                    this.webSocketService.clearMessageHandlers();
                     this.webSocketService.isConnected = false;
                     new NavigationFacade().navigateTo('login');
                 },

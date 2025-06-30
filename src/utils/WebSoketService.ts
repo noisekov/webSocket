@@ -107,6 +107,10 @@ export default class WebSocketService {
         this.messageHandlers.push(handler);
     }
 
+    public clearMessageHandlers() {
+        this.messageHandlers = [];
+    }
+
     public close() {
         this.connection.close();
     }
