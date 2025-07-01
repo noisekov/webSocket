@@ -83,7 +83,7 @@ export default class MainPage {
         this.appState.subscribe(() => this.updateUserList());
     }
 
-    updateUserList() {
+    private updateUserList() {
         const arrLoginedUsers = (this.appState.getState() as AppStateI)
             .users_active.payload.users;
         const arrInactiveUsers = (this.appState.getState() as AppStateI)
@@ -112,7 +112,10 @@ export default class MainPage {
         this.users.appendChildren(userComponents);
     }
 
-    handlerChosenUser(component: Component, clickedUserName: string | null) {
+    private handlerChosenUser(
+        component: Component,
+        clickedUserName: string | null
+    ) {
         const {
             chosen_user: headerChatComponent,
             chosen_user_status: headerChatStatus,
@@ -137,7 +140,7 @@ export default class MainPage {
         });
     }
 
-    renderHeader() {
+    private renderHeader() {
         const header = new Component({
             tag: 'div',
             className: 'main-header',
@@ -177,7 +180,7 @@ export default class MainPage {
         return header;
     }
 
-    render() {
+    public render() {
         const content = new Component({
             className: 'main-wrapper',
         });
@@ -192,7 +195,7 @@ export default class MainPage {
             className: 'right-side',
             tag: 'div',
         });
-        rightSideChat.appendChildren([new Chat()]);
+        rightSideChat.append(new Chat());
         leftSideChat.appendChildren([new SearchInput(), this.users]);
         chatWrapper.appendChildren([leftSideChat, rightSideChat]);
 

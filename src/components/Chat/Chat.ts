@@ -57,7 +57,7 @@ export class Chat extends Component {
             chosen_user_status: chosenUserStatus,
         });
         header.appendChildren([chosenUser, chosenUserStatus]);
-        this.appendChildren([header]);
+        this.append(header);
     }
 
     private renderChatWindow() {
@@ -69,9 +69,9 @@ export class Chat extends Component {
         this.chatWindow.addListener('scroll', () => {
             this.appState.getState().context_menu.destroy();
         });
-        this.chatWindow.appendChildren([mesageWrapper]);
+        this.chatWindow.append(mesageWrapper);
         this.appState.setState({ chat_content: mesageWrapper });
-        this.appendChildren([this.chatWindow]);
+        this.append(this.chatWindow);
     }
 
     private renderInput() {
@@ -94,7 +94,7 @@ export class Chat extends Component {
         submit.setAttribute('type', 'submit');
         submit.setAttribute('disabled', 'true');
         inputWrapper.appendChildren([textarea, submit]);
-        this.appendChildren([inputWrapper]);
+        this.append(inputWrapper);
         this.submitHandler(submit, textarea);
         this.textAreaHandler(submit, textarea);
     }
