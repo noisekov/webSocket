@@ -126,3 +126,9 @@
         border-radius: var(--radius-small);
     }
 }
+
+.message__text-editable {
+    font-size: 12px;
+    display: flex;
+    align-self: end;
+}

@@ -3,7 +3,7 @@ import ButtonComponent from '../../components/ButtonComponent';
 import { Chat } from '../../components/Chat/Chat';
 import Component from '../../components/Component';
 import { SearchInput } from '../../components/SearchInput/SearchInput';
-import AppState, { AppStateI } from '../../utils/AppState';
+import AppState from '../../utils/AppState';
 import NavigationFacade from '../../utils/NavigationFacade';
 import WebSocketService from '../../utils/WebSoketService';
 
@@ -70,12 +70,15 @@ export default class MainPage {
         const userExists = state.some((existingUser) => {
             if (existingUser.login === user.login) {
                 existingUser.isLogined = true;
+
                 return true;
             }
             return false;
         });
         this.updateUserList();
+
         if (userExists) return;
+
         this.appState.addNewUser(user);
     }
 
@@ -84,10 +87,10 @@ export default class MainPage {
     }
 
     private updateUserList() {
-        const arrLoginedUsers = (this.appState.getState() as AppStateI)
-            .users_active.payload.users;
-        const arrInactiveUsers = (this.appState.getState() as AppStateI)
-            .users_inactive.payload.users;
+        const arrLoginedUsers =
+            this.appState.getState().users_active.payload.users;
+        const arrInactiveUsers =
+            this.appState.getState().users_inactive.payload.users;
         const arrAllUsers = [...arrLoginedUsers, ...arrInactiveUsers];
         this.users.destroyChildren();
         const userComponents = arrAllUsers.flatMap(
@@ -95,6 +98,7 @@ export default class MainPage {
                 if (user.login === this.currentUserData.login) {
                     return [];
                 }
+
                 const component = new Component({
                     tag: `li`,
                     className: `user ${user.isLogined ? 'active' : 'inactive'}`,
@@ -106,6 +110,7 @@ export default class MainPage {
                     chatComponent.destroyChildren();
                     this.handlerChosenUser(component, clickedUserName);
                 });
+
                 return component;
             }
         );

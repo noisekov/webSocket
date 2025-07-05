@@ -94,6 +94,7 @@ export class Chat extends Component {
         submit.setAttribute('type', 'submit');
         submit.setAttribute('disabled', 'true');
         inputWrapper.appendChildren([textarea, submit]);
+        this.appState.setState({ submit });
         this.append(inputWrapper);
         this.submitHandler(submit, textarea);
         this.textAreaHandler(submit, textarea);
@@ -152,6 +153,10 @@ export class Chat extends Component {
                 this.deleteMessage(typeData.payload.message.id);
             }
 
+            if (typeData.type === 'MSG_EDIT') {
+                this.changeEditableMessage(typeData.payload.message);
+            }
+
             if (
                 typeData.type === 'MSG_FROM_USER' &&
                 typeData.payload.messages.length
@@ -166,11 +171,32 @@ export class Chat extends Component {
             }
         });
     }
+    private changeEditableMessage(messageData: messageDataI) {
+        const chatComponent = this.appState.getState().chat_content;
 
-    sendMessage(submit: Component, textarea: Component) {
+        chatComponent.getChildren().forEach((chatComponent) => {
+            if (chatComponent.getNode().id === messageData.id) {
+                const [, messageElemnt, messageStatus] =
+                    chatComponent.getChildren();
+                messageElemnt.setTextContent(messageData.text);
+                messageStatus.setTextContent('edited');
+            }
+        });
+    }
+
+    private sendMessage(submit: Component, textarea: Component) {
         const valueTextArea = (textarea.getNode() as HTMLTextAreaElement).value;
 
         if (!valueTextArea) {
+            return;
+        }
+
+        const { id, component } = this.appState.getState().editable_message;
+
+        if (id) {
+            this.sendEditableMessage(component, valueTextArea, id);
+            this.defaultFormBehavior(textarea, submit);
+
             return;
         }
 
@@ -188,8 +214,39 @@ export class Chat extends Component {
             },
         });
 
+        this.defaultFormBehavior(textarea, submit);
+    }
+
+    private defaultFormBehavior(textarea: Component, submit: Component) {
         (textarea.getNode() as HTMLTextAreaElement).value = '';
         submit.setAttribute('disabled', 'true');
+    }
+
+    private sendEditableMessage(
+        component: Element,
+        valueTextArea: string,
+        id: string
+    ) {
+        const [, editableMessageContent, editableMessageStatus] =
+            component.children;
+        editableMessageContent.textContent = valueTextArea;
+        editableMessageStatus.textContent = 'edited';
+        this.webSocketService.send({
+            id: null,
+            type: 'MSG_EDIT',
+            payload: {
+                message: {
+                    id,
+                    text: valueTextArea,
+                },
+            },
+        });
+        this.appState.setState({
+            editable_message: {
+                id: '',
+                component: document.createElement('div'),
+            },
+        });
     }
 
     private scrollDown() {
@@ -240,14 +297,20 @@ export class Chat extends Component {
         chatComponent: Component,
         chosenUsers: string | null
     ) {
-        const { from: messageFrom, text, datetime, id } = messageData;
+        const {
+            from: messageFrom,
+            text,
+            datetime,
+            id,
+            status: { isEdited },
+        } = messageData;
         const isMyMessage = messageFrom !== chosenUsers;
+        const formatDate = new Date(datetime).toLocaleString();
         const message = new Component({
             tag: 'div',
             className: `message ${isMyMessage ? '' : 'message__not-me'}`,
-            id: id,
         });
-        const formatDate = new Date(datetime).toLocaleString();
+        message.addId(id);
         const messageHeader = new Component({
             tag: 'div',
             className: 'message__header',
@@ -260,6 +323,27 @@ export class Chat extends Component {
             fromWhoMessage,
             new Component({ tag: 'span', text: formatDate }),
         ]);
+        this.fillMessageTemplate(
+            message,
+            messageHeader,
+            text,
+            isEdited,
+            chatComponent
+        );
+    }
+
+    private fillMessageTemplate(
+        message: Component,
+        messageHeader: Component,
+        text: string,
+        isEdited: boolean,
+        chatComponent: Component
+    ) {
+        const editableTemplate = new Component({
+            tag: 'span',
+            className: 'message__text-editable',
+            text: isEdited ? 'edited' : '',
+        });
         message.appendChildren([
             messageHeader,
             new Component({
@@ -267,6 +351,7 @@ export class Chat extends Component {
                 className: 'message__text',
                 text,
             }),
+            editableTemplate,
         ]);
         chatComponent.append(message);
     }
@@ -281,32 +366,66 @@ export class Chat extends Component {
             });
             contextMenu.getNode().style.top = `${rect.top + scrollY}px`;
             contextMenu.getNode().style.left = `${rect.left + scrollX}px`;
-            const delteBtn = new Component({
-                tag: 'li',
-                className: 'context-menu__item',
-                text: 'Delete',
-            });
-            delteBtn.addListener('click', () => {
-                const messageElement = (evt.target as HTMLElement).closest(
-                    '.message'
-                );
-
-                if (!messageElement) return;
-
-                this.webSocketService.send({
-                    id: null,
-                    type: 'MSG_DELETE',
-                    payload: {
-                        message: {
-                            id: messageElement.id,
-                        },
-                    },
-                });
-            });
-            contextMenu.append(delteBtn);
-            this.appState.getState().mainTemplate.append(contextMenu);
-            this.appState.setState({ context_menu: contextMenu });
+            this.renderDelete(evt, contextMenu);
+            this.renderEdit(evt, contextMenu);
         }
+    }
+
+    private renderDelete(evt: MouseEvent, contextMenu: Component) {
+        const delteBtn = new Component({
+            tag: 'li',
+            className: 'context-menu__item',
+            text: 'Delete',
+        });
+        delteBtn.addListener('click', () => {
+            const messageElement = (evt.target as HTMLElement).closest(
+                '.message'
+            );
+
+            if (!messageElement) return;
+
+            this.webSocketService.send({
+                id: null,
+                type: 'MSG_DELETE',
+                payload: {
+                    message: {
+                        id: messageElement.id,
+                    },
+                },
+            });
+        });
+        contextMenu.append(delteBtn);
+        this.appState.getState().mainTemplate.append(contextMenu);
+        this.appState.setState({ context_menu: contextMenu });
+    }
+
+    private renderEdit(evt: MouseEvent, contextMenu: Component) {
+        const editBtn = new Component({
+            tag: 'li',
+            className: 'context-menu__item',
+            text: 'Edit',
+        });
+        editBtn.addListener('click', () => {
+            const messageElement = (evt.target as HTMLElement).closest(
+                '.message'
+            );
+
+            if (!messageElement) return;
+
+            const textArea = this.appState.getState().textarea;
+            const submitBtn = this.appState.getState().submit;
+            this.appState.setState({
+                editable_message: {
+                    id: messageElement.id,
+                    component: messageElement,
+                },
+            });
+            submitBtn.removeAttribute('disabled');
+            const messageText = messageElement.children[1].textContent || '';
+            (textArea.getNode() as HTMLTextAreaElement).value = messageText;
+            textArea.getNode().focus();
+        });
+        contextMenu.append(editBtn);
     }
 
     private textAreaHandler(submit: Component, textarea: Component) {

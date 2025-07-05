@@ -1,29 +1,5 @@
 import Component from '../components/Component';
 
-export interface AppStateI {
-    content: Component;
-    users_login: object;
-    users_active: {
-        payload: {
-            users: [];
-        };
-    };
-    users_active_before_filter: [];
-    users_inactive_before_filter: [];
-    users_inactive: {
-        payload: {
-            users: [];
-        };
-    };
-    all_users: [];
-    chosen_user: Component;
-    chosen_user_status: Component;
-    chat_content: Component;
-    textarea: Component;
-    mainTemplate: Component;
-    context_menu: Component;
-}
-
 type Subscriber = () => void;
 
 export default class AppState {
@@ -33,6 +9,7 @@ export default class AppState {
 
     private constructor() {
         this.state = {
+            content: new Component({}),
             users_active: {
                 payload: { users: [] as any[] },
             },
@@ -41,25 +18,17 @@ export default class AppState {
             },
             users_active_before_filter: [],
             users_inactive_before_filter: [],
-            chosen_user: new Component({ tag: 'div', className: 'chat__user' }),
-            chosen_user_status: new Component({
-                tag: 'div',
-                className: 'chat__user-status',
-            }),
-            chat_content: new Component({
-                tag: 'div',
-                className: 'chat__window',
-                text: 'Select the user to send the message to...',
-            }),
-            textarea: new Component({
-                tag: 'textarea',
-                className: 'chat__textarea',
-            }),
-            mainTemplate: new Component({ className: 'main' }),
-            context_menu: new Component({
-                tag: 'ul',
-                className: 'context-menu',
-            }),
+            chosen_user: new Component({}),
+            chosen_user_status: new Component({}),
+            chat_content: new Component({}),
+            textarea: new Component({}),
+            mainTemplate: new Component({}),
+            context_menu: new Component({}),
+            submit: new Component({}),
+            editable_message: {
+                id: '',
+                component: document.createElement('div'),
+            },
         };
     }
 

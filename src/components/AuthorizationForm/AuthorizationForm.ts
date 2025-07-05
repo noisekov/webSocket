@@ -1,5 +1,5 @@
 import Component from '../Component';
-import AppState, { AppStateI } from '../../utils/AppState';
+import AppState from '../../utils/AppState';
 import NavigationFacade from '../../utils/NavigationFacade';
 import WebSocketService from '../../utils/WebSoketService';
 
@@ -46,7 +46,7 @@ export default class AuthorizationForm extends Component {
         this.isPasswordValid = false;
         this.appState = AppState.getInstance();
         this.webSocketService = WebSocketService.getInstance();
-        this.formComponent = (this.appState.getState() as AppStateI).content;
+        this.formComponent = this.appState.getState().content;
         this.updateInputLoginComponents();
         this.updateInputPasswordComponents();
         this.updateLogInBtnComponent();

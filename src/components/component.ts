@@ -4,12 +4,11 @@ export default class Component {
     listeners: { [key: string]: EventListener };
 
     constructor(
-        { tag = 'div', className = '', text = '', id = '' },
+        { tag = 'div', className = '', text = '' },
         ...children: Component[]
     ) {
         const node = document.createElement(tag);
         node.className = className;
-        node.id = id;
         node.textContent = text;
         this.#node = node;
         this.listeners = {};
@@ -22,6 +21,10 @@ export default class Component {
     append(child: Component) {
         this.#children.push(child);
         this.#node.append(child.getNode());
+    }
+
+    addId(id: string) {
+        this.#node.id = id;
     }
 
     appendChildren(children: Component[]) {
