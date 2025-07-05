@@ -128,6 +128,7 @@ export default class AuthorizationForm extends Component {
 
     private updateInputPasswordComponents() {
         this.inputPassword.setAttribute('placeholder', 'Set password');
+        this.inputPassword.setAttribute('type', 'password');
         this.inputPassword.setAttribute('name', 'password');
         this.inputPassword.setAttribute('autocomplete', 'off');
 
