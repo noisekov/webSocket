@@ -1,7 +1,7 @@
 import { BurgerMenu } from '../../components/BurgerMenu/BurgerMenu';
 import ButtonComponent from '../../components/ButtonComponent';
 import { Chat } from '../../components/Chat/Chat';
-import Component from '../../components/Component';
+import Component from '../../components/Сomponent';
 import { SearchInput } from '../../components/SearchInput/SearchInput';
 import AppState from '../../utils/AppState';
 import NavigationFacade from '../../utils/NavigationFacade';

@@ -1,4 +1,4 @@
-import Component from '../Component';
+import Component from '../Сomponent';
 
 export class BurgerMenu extends Component {
     constructor() {

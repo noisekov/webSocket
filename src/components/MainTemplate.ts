@@ -1,5 +1,5 @@
 import AppState from '../utils/AppState';
-import Component from './Component';
+import Component from './Сomponent';
 
 export default class MainTemplate extends Component {
     constructor() {

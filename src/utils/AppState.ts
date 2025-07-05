@@ -1,4 +1,4 @@
-import Component from '../components/Component';
+import Component from '../components/Сomponent';
 
 type Subscriber = () => void;
 

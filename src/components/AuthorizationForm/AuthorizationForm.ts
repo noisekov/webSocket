@@ -1,4 +1,4 @@
-import Component from '../Component';
+import Component from '../Сomponent';
 import AppState from '../../utils/AppState';
 import NavigationFacade from '../../utils/NavigationFacade';
 import WebSocketService from '../../utils/WebSoketService';

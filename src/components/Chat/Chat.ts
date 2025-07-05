@@ -1,6 +1,6 @@
 import AppState from '../../utils/AppState';
 import WebSocketService from '../../utils/WebSoketService';
-import Component from '../Component';
+import Component from '../Сomponent';
 
 interface messageDataI {
     id: string;

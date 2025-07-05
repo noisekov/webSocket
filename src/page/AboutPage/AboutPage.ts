@@ -1,5 +1,5 @@
 import ButtonComponent from '../../components/ButtonComponent';
-import Component from '../../components/Component';
+import Component from '../../components/Сomponent';
 import NavigationFacade from '../../utils/NavigationFacade';
 
 export default class AboutPage {
