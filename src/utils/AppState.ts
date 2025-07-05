@@ -27,8 +27,10 @@ export default class AppState {
             submit: new Component({}),
             editable_message: {
                 id: '',
-                component: document.createElement('div'),
+                component: document.createElement('span'),
             },
+            input_wrapper: new Component({}),
+            editable_cancel: new Component({}),
         };
     }
 

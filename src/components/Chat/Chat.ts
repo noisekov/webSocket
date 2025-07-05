@@ -79,6 +79,7 @@ export class Chat extends Component {
             tag: 'div',
             className: 'chat__message',
         });
+        this.appState.setState({ input_wrapper: inputWrapper });
         const textarea = new Component({
             tag: 'textarea',
             className: 'chat__textarea',
@@ -194,8 +195,10 @@ export class Chat extends Component {
         const { id, component } = this.appState.getState().editable_message;
 
         if (id) {
+            const editableCancel = this.appState.getState().editable_cancel;
             this.sendEditableMessage(component, valueTextArea, id);
             this.defaultFormBehavior(textarea, submit);
+            editableCancel.destroy();
 
             return;
         }
@@ -244,7 +247,7 @@ export class Chat extends Component {
         this.appState.setState({
             editable_message: {
                 id: '',
-                component: document.createElement('div'),
+                component: document.createElement('span'),
             },
         });
     }
@@ -420,12 +423,36 @@ export class Chat extends Component {
                     component: messageElement,
                 },
             });
+            this.renderCloseEditBtn();
             submitBtn.removeAttribute('disabled');
             const messageText = messageElement.children[1].textContent || '';
             (textArea.getNode() as HTMLTextAreaElement).value = messageText;
             textArea.getNode().focus();
         });
         contextMenu.append(editBtn);
+    }
+
+    private renderCloseEditBtn() {
+        const inputWrapper = this.appState.getState().input_wrapper;
+        const editableCancel = new Component({
+            tag: 'span',
+            className: 'message__editable-cancel',
+            text: 'X',
+        });
+        editableCancel.addListener('click', () => {
+            this.appState.setState({
+                editable_message: {
+                    id: '',
+                    component: document.createElement('span'),
+                },
+            });
+            editableCancel.destroy();
+            const textarea = this.appState.getState().textarea;
+            const submit = this.appState.getState().submit;
+            this.defaultFormBehavior(textarea, submit);
+        });
+        inputWrapper.append(editableCancel);
+        this.appState.setState({ editable_cancel: editableCancel });
     }
 
     private textAreaHandler(submit: Component, textarea: Component) {

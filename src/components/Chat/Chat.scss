@@ -22,6 +22,7 @@
 }
 
 .chat__message {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -131,4 +132,16 @@
     font-size: 12px;
     display: flex;
     align-self: end;
+}
+
+.message__editable-cancel {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 105px;
+    border: 1px solid var(--black);
+    border-radius: 50%;
+    padding: 2px;
+    cursor: pointer;
+    user-select: none;
 }
