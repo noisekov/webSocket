@@ -2,6 +2,13 @@ import Component from '../Сomponent';
 import AppState from '../../utils/AppState';
 import NavigationFacade from '../../utils/NavigationFacade';
 import WebSocketService from '../../utils/WebSoketService';
+import { ModalError } from '../ModalError/ModalError';
+
+interface userDataI {
+    login: string;
+    password: string;
+    isLogined: boolean;
+}
 
 export default class AuthorizationForm extends Component {
     private inputLogin;
@@ -9,11 +16,13 @@ export default class AuthorizationForm extends Component {
     private inputLoginMsg;
     private inputPasswordMsg;
     private LogInBtn;
+    private data: userDataI;
     private isLoginValid;
     private isPasswordValid;
     private formComponent;
     private appState;
     private webSocketService;
+    // eslint-disable-next-line max-lines-per-function
     constructor() {
         super({
             tag: 'fieldset',
@@ -42,6 +51,11 @@ export default class AuthorizationForm extends Component {
             className: 'auth-btn button',
             text: 'Log in',
         });
+        this.data = {
+            login: '',
+            password: '',
+            isLogined: false,
+        };
         this.isLoginValid = false;
         this.isPasswordValid = false;
         this.appState = AppState.getInstance();
@@ -51,6 +65,7 @@ export default class AuthorizationForm extends Component {
         this.updateInputPasswordComponents();
         this.updateLogInBtnComponent();
         this.addListenerFormComponent();
+        this.addWebsocketListener();
         this.addComponents();
     }
 
@@ -67,6 +82,33 @@ export default class AuthorizationForm extends Component {
         }
     }
 
+    private addWebsocketListener() {
+        this.webSocketService.onMessage((event) => {
+            const typeData = JSON.parse(event.data);
+
+            if (typeData.type === 'ERROR') {
+                new ModalError(typeData.payload.error).render();
+
+                return;
+            }
+
+            if (typeData.type === 'USER_LOGIN') {
+                sessionStorage.setItem(
+                    'noisekov-funchat',
+                    JSON.stringify(this.data)
+                );
+                this.webSocketService.initializeConnection();
+            }
+
+            if (typeData.type === 'USER_ACTIVE') {
+                this.appState.setState({
+                    users_active: typeData,
+                });
+                new NavigationFacade().navigateTo('main');
+            }
+        });
+    }
+
     private addListenerFormComponent() {
         this.formComponent.addListener('submit', (evt: Event) => {
             evt.preventDefault();
@@ -75,25 +117,21 @@ export default class AuthorizationForm extends Component {
             const [login, password] = [...data.values()].map((value) =>
                 value.toString()
             );
-            sessionStorage.setItem(
-                'noisekov-funchat',
-                `{
-                  "login": "${login}",
-                  "password": "${password}",
-                  "isLogined": true
-                }`
-            );
-
-            this.webSocketService.initializeConnection();
-            this.webSocketService.onMessage((event) => {
-                const typeData = JSON.parse(event.data);
-
-                if (typeData.type === 'USER_ACTIVE') {
-                    this.appState.setState({
-                        users_active: typeData,
-                    });
-                    new NavigationFacade().navigateTo('main');
-                }
+            this.data = {
+                login: login,
+                password: password,
+                isLogined: true,
+            };
+            this.webSocketService.send({
+                id: null,
+                type: 'USER_LOGIN',
+                payload: {
+                    user: {
+                        login,
+                        password,
+                        isLogined: true,
+                    },
+                },
             });
         });
     }
