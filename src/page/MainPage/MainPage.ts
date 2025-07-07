@@ -32,21 +32,24 @@ export default class MainPage {
     private setupWebSocketListeners(): void {
         this.webSocketService.onMessage(async (event) => {
             const typeData = JSON.parse(event.data);
-            const { user } = typeData.payload;
+            const {
+                payload: { user },
+                type,
+            } = typeData;
 
-            if (typeData.type === 'USER_INACTIVE') {
+            if (type === 'USER_INACTIVE') {
                 this.appState.setState({
                     users_inactive: typeData,
                 });
             }
 
-            if (typeData.type === 'USER_ACTIVE') {
+            if (type === 'USER_ACTIVE') {
                 this.appState.setState({
                     users_active: typeData,
                 });
             }
 
-            if (typeData.type === 'USER_EXTERNAL_LOGOUT') {
+            if (type === 'USER_EXTERNAL_LOGOUT') {
                 this.appState
                     .getState()
                     .users_active.payload.users.forEach(
@@ -59,7 +62,7 @@ export default class MainPage {
                 this.updateUserList();
             }
 
-            if (typeData.type === 'USER_EXTERNAL_LOGIN') {
+            if (type === 'USER_EXTERNAL_LOGIN') {
                 this.handlerExternalLogin(user);
             }
         });
@@ -87,10 +90,14 @@ export default class MainPage {
     }
 
     private updateUserList() {
-        const arrLoginedUsers =
-            this.appState.getState().users_active.payload.users;
-        const arrInactiveUsers =
-            this.appState.getState().users_inactive.payload.users;
+        const {
+            users_active: {
+                payload: { users: arrLoginedUsers },
+            },
+            users_inactive: {
+                payload: { users: arrInactiveUsers },
+            },
+        } = this.appState.getState();
         const arrAllUsers = [...arrLoginedUsers, ...arrInactiveUsers];
         this.users.destroyChildren();
         const userComponents = arrAllUsers.flatMap(

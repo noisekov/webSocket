@@ -126,11 +126,7 @@ export default class AuthorizationForm extends Component {
                 id: null,
                 type: 'USER_LOGIN',
                 payload: {
-                    user: {
-                        login,
-                        password,
-                        isLogined: true,
-                    },
+                    user: this.data,
                 },
             });
         });

@@ -112,6 +112,7 @@ export class Chat extends Component {
                 (evt.target as HTMLElement).closest('.message__not-me')
             )
                 return;
+
             evt.preventDefault();
             this.renderContextMenu(evt as MouseEvent);
         });
@@ -149,25 +150,23 @@ export class Chat extends Component {
         });
 
         this.webSocketService.onMessage((event) => {
-            const typeData = JSON.parse(event.data);
-            if (typeData.type === 'MSG_DELETE') {
-                this.deleteMessage(typeData.payload.message.id);
+            const { type, payload } = JSON.parse(event.data);
+
+            if (type === 'MSG_DELETE') {
+                this.deleteMessage(payload.message.id);
             }
 
-            if (typeData.type === 'MSG_EDIT') {
-                this.changeEditableMessage(typeData.payload.message);
+            if (type === 'MSG_EDIT') {
+                this.changeEditableMessage(payload.message);
             }
 
-            if (
-                typeData.type === 'MSG_FROM_USER' &&
-                typeData.payload.messages.length
-            ) {
-                const messageData = typeData.payload.messages;
+            if (type === 'MSG_FROM_USER' && payload.messages.length) {
+                const messageData = payload.messages;
                 this.renderMessages(messageData);
             }
 
-            if (typeData.type === 'MSG_SEND') {
-                const messageData = typeData.payload.message;
+            if (type === 'MSG_SEND') {
+                const messageData = payload.message;
                 this.addMessage(messageData);
             }
         });
@@ -192,10 +191,13 @@ export class Chat extends Component {
             return;
         }
 
-        const { id, component } = this.appState.getState().editable_message;
+        const {
+            editable_message: { id, component },
+            editable_cancel: editableCancel,
+            chosen_user: chosenUser,
+        } = this.appState.getState();
 
         if (id) {
-            const editableCancel = this.appState.getState().editable_cancel;
             this.sendEditableMessage(component, valueTextArea, id);
             this.defaultFormBehavior(textarea, submit);
             editableCancel.destroy();
@@ -203,9 +205,7 @@ export class Chat extends Component {
             return;
         }
 
-        const userTo = this.appState
-            .getState()
-            .chosen_user.getNode().textContent;
+        const userTo = chosenUser.getNode().textContent;
         this.webSocketService.send({
             id: null,
             type: 'MSG_SEND',
@@ -258,15 +258,14 @@ export class Chat extends Component {
     }
 
     private renderMessages(messagesData: messageDataI | messageDataI[]) {
-        const chatComponent = this.appState.getState().chat_content;
+        const { chat_content: chatComponent, chosen_user: chosenUsersState } =
+            this.appState.getState();
         chatComponent.setTextContent('');
         chatComponent.destroyChildren();
         const messages = Array.isArray(messagesData)
             ? messagesData
             : [messagesData];
-        const chosenUsers = this.appState
-            .getState()
-            .chosen_user.getNode().textContent;
+        const chosenUsers = chosenUsersState.getNode().textContent;
         messages.forEach((messageData) =>
             this.createTemplate(messageData, chatComponent, chosenUsers)
         );
@@ -275,10 +274,9 @@ export class Chat extends Component {
 
     private addMessage(messagesData: messageDataI) {
         const { from: messageFrom, to: messageTo } = messagesData;
-        const chatComponent = this.appState.getState().chat_content;
-        const chosenUsers = this.appState
-            .getState()
-            .chosen_user.getNode().textContent;
+        const { chat_content: chatComponent, chosen_user: chosenUserState } =
+            this.appState.getState();
+        const chosenUsers = chosenUserState.getNode().textContent;
         // if authrizen user and chosen user dont match with message sender or recipient
         const isPossibleDisplayMessageInChat =
             (this.currentUserDataLogin === messageFrom &&
@@ -415,8 +413,8 @@ export class Chat extends Component {
 
             if (!messageElement) return;
 
-            const textArea = this.appState.getState().textarea;
-            const submitBtn = this.appState.getState().submit;
+            const { textarea: textArea, submit: submitBtn } =
+                this.appState.getState();
             this.appState.setState({
                 editable_message: {
                     id: messageElement.id,
@@ -426,8 +424,9 @@ export class Chat extends Component {
             this.renderCloseEditBtn();
             submitBtn.removeAttribute('disabled');
             const messageText = messageElement.children[1].textContent || '';
-            (textArea.getNode() as HTMLTextAreaElement).value = messageText;
-            textArea.getNode().focus();
+            const textAreaNode = textArea.getNode() as HTMLTextAreaElement;
+            textAreaNode.value = messageText;
+            textAreaNode.focus();
         });
         contextMenu.append(editBtn);
     }
@@ -447,8 +446,7 @@ export class Chat extends Component {
                 },
             });
             editableCancel.destroy();
-            const textarea = this.appState.getState().textarea;
-            const submit = this.appState.getState().submit;
+            const { textarea, submit } = this.appState.getState();
             this.defaultFormBehavior(textarea, submit);
         });
         inputWrapper.append(editableCancel);
